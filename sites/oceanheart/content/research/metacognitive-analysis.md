@@ -3,7 +3,7 @@ title = "Metacognitive Analysis"
 subtitle = "Clinical Psychology of the 16 Pivots"
 description = "Three-stage clinical psychology analysis of the reflective functioning that enabled each pushback moment. Initial assessment: RF 6-7. Recalibrated to RF 6-9 after disclosure of 20 years meditation practice including 15 Zen sesshin. Three peaks at RF 8-9."
 date = 2026-02-27
-draft = false
+draft = true
 tags = ["metacognition", "reflective-functioning", "clinical-psychology", "zen", "human-ai-interaction"]
 +++
 

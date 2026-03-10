@@ -1,12 +1,9 @@
 +++
 title = "The Agentic Engineering Bootcamp"
-date = "2026-03-18"
+date = "2026-03-10"
 description = "A first-principles curriculum for SWEs who steer AI agents. Five bootcamps, 51 steps, 208-259 hours. From Linux primitives to evaluation pipelines."
 tags = ["bootcamp", "agentic-engineering", "linux", "learning"]
-draft = true
 +++
-
-{{< draft-notice >}}
 
 ## The observation
 

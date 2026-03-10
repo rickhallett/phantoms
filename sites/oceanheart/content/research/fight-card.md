@@ -3,7 +3,7 @@ title = "The Fight Card"
 subtitle = "Human vs. LLM Confirmation Bias"
 description = "16 rounds where the human pushed back against sycophantic drift across 208 session decisions. Mapped from the actual decision record, not reconstructed from memory. Key finding: human won every round by being honest when the model couldn't be."
 date = 2026-02-27
-draft = false
+draft = true
 tags = ["sycophancy", "metacognition", "human-ai-interaction", "agentic-systems"]
 +++
 

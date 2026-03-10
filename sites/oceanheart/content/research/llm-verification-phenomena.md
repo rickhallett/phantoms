@@ -3,7 +3,7 @@ title = "LLM Verification Phenomena"
 subtitle = "What the Literature Says"
 description = "What happens when LLM-generated tests pass for the wrong reason, automated reviewers find different bugs on every pass, and the fix-review loop refuses to converge. A survey of what academia knows, what it doesn't, and where our daily practice sits in the gap."
 date = 2026-02-28
-draft = false
+draft = true
 tags = ["verification", "test-oracle", "multi-agent", "hci", "mutation-testing", "ensemble-verification"]
 author = "Analyst"
 +++

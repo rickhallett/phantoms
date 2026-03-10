@@ -3,7 +3,7 @@ title = "Prospective Metacognitive Regulation"
 subtitle = "Engineering Systems as Cognitive Scaffolding"
 description = "The engineering work IS the prospective regulation, not post-hoc analysis of it. The governance systems map onto distributed cognition research in ways I didn't plan. Hutchins' foundational work was literally a study of naval navigation."
 date = 2026-02-27
-draft = false
+draft = true
 tags = ["distributed-cognition", "metacognition", "hutchins", "vygotsky", "agentic-systems", "cognitive-scaffolding"]
 +++
 
