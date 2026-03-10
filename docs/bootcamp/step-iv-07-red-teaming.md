@@ -1,17 +1,11 @@
-+++
-title = "Red Teaming for Safety-Critical Capabilities"
-date = "2026-03-10"
-description = "Safety evaluation, sabotage modalities, alignment faking, deception detection, responsible disclosure."
-tags = ["red-team", "safety", "alignment", "bootcamp"]
-step = 7
-tier = 3
-estimate = "5-6 hours"
-bootcamp = 4
-+++
+# Step 7: Red Teaming for Safety-Critical Capabilities
 
-Step 7 of 9 in Bootcamp IV: Evaluation & Adversarial Testing.
+**Detecting Dangerous Capabilities and Concealment**
 
----
+**Estimated time:** 5-6 hours
+**Field maturity:** FRONTIER
+**Prerequisites:** Step 4 (eval pipelines - you need the Task/Solver/Scorer model), Step 6 (adversarial testing methodology - you need the attacker/defender framework)
+**Leads to:** Step 8 (Interpreting and Communicating Eval Results - how to report what you find here)
 
 Step 7 of 9 in the Evaluation & Adversarial Testing Bootcamp.
 
@@ -1573,4 +1567,3 @@ engineering demands and the uncertainty that safety evaluation produces.
 The connection to this step is direct: the most rigorous safety eval in
 the world is useless if the results are misinterpreted, miscommunicated,
 or used to justify decisions they do not support.
-

@@ -1,17 +1,11 @@
-+++
-title = "Evaluating Agents and Workflows"
-date = "2026-03-10"
-description = "Task-based evaluation, trajectory analysis, Inspect AI, sandboxed execution, tool use accuracy."
-tags = ["evals", "agents", "inspect-ai", "bootcamp"]
-step = 4
-tier = 2
-estimate = "5-6 hours"
-bootcamp = 4
-+++
+# Step 4: Evaluating Agents and Workflows
 
-Step 4 of 9 in Bootcamp IV: Evaluation & Adversarial Testing.
+**The Trajectory Problem**
 
----
+**Estimated time:** 5-6 hours
+**Field maturity:** EMERGING (task-based benchmarks, Inspect AI), FRONTIER (trajectory evaluation, cost-as-eval-dimension)
+**Prerequisites:** Steps 1-3 (measurement epistemology, dataset design, scoring methods), Bootcamp II Steps 2 and 5 (agent architecture, tool design)
+**Leads to:** Step 5 (Eval Infrastructure and Automation - building the pipelines that run the agent evals designed here)
 
 Step 4 of 9 in the Evaluation & Adversarial Testing Bootcamp.
 
@@ -1828,4 +1822,3 @@ as feedback, and regression testing to ensure changes do not break what already 
 Step 5 takes the agent evals you designed here and embeds them in a development
 workflow - the eval moves from "something you run" to "something that runs on every
 change."
-

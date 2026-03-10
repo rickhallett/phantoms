@@ -1,17 +1,11 @@
-+++
-title = "Eval Infrastructure and Automation"
-date = "2026-03-10"
-description = "Eval-driven development, evals in CI/CD, regression testing, eval cost budgeting."
-tags = ["evals", "infrastructure", "ci-cd", "bootcamp"]
-step = 5
-tier = 2
-estimate = "4-5 hours"
-bootcamp = 4
-+++
+# Step 5: Eval Infrastructure and Automation
 
-Step 5 of 9 in Bootcamp IV: Evaluation & Adversarial Testing.
+**Making Evaluation a First-Class Engineering Workflow**
 
----
+**Estimated time:** 4-5 hours
+**Field maturity:** EMERGING
+**Prerequisites:** Steps 2-4 (you need eval design, datasets, and scoring methods), Bootcamp I Step 6 (Make/Just - you need build automation fundamentals)
+**Leads to:** Step 6 (Adversarial Testing Methodology - the infrastructure built here is what runs adversarial evals at scale)
 
 Step 5 of 9 in the Evaluation & Adversarial Testing Bootcamp.
 
@@ -1138,4 +1132,3 @@ systems is where published best practices end and operational experience begins.
 > to adversarial review - the same principles from this step (automation, structured
 > output, statistical comparison) deployed for a different purpose. Step 6 unpacks the
 > methodology.
-

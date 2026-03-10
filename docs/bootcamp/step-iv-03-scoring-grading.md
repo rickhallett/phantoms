@@ -1,17 +1,11 @@
-+++
-title = "Scoring and Grading Methods"
-date = "2026-03-10"
-description = "Code-based grading, LLM-as-judge, human grading. Rubric design, grader calibration."
-tags = ["evals", "grading", "llm-as-judge", "bootcamp"]
-step = 3
-tier = 1
-estimate = "5-6 hours"
-bootcamp = 4
-+++
+# Step 3: Scoring and Grading Methods
 
-Step 3 of 9 in Bootcamp IV: Evaluation & Adversarial Testing.
+**How to Grade LLM Output - and How to Know if Your Grader is Any Good**
 
----
+**Estimated time:** 5-6 hours
+**Field maturity:** EMERGING
+**Prerequisites:** Step 1 (Eval Epistemology - you need the measurement framework), Step 2 (Dataset Design - you need a dataset to score against), Bootcamp I Step 5 (Python CLI - you will write code)
+**Leads to:** Step 4 (Evaluating Agents and Workflows - scoring agent trajectories requires the grading methods built here)
 
 Step 3 of 9 in the Evaluation & Adversarial Testing Bootcamp.
 
@@ -1506,4 +1500,3 @@ accomplish the goal?), trajectory evaluation (was the path reasonable?), and the
 Inspect AI agent evaluation model with sandboxed execution. The scoring methods
 you built here become components in a larger evaluation pipeline where the unit
 of evaluation is not a string but an action sequence.
-

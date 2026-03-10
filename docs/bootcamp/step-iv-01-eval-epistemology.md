@@ -1,17 +1,11 @@
-+++
-title = "What Evaluations Actually Measure"
-date = "2026-03-10"
-description = "Construct validity, content contamination, saturation, Goodhart's law. The epistemology of evals."
-tags = ["evals", "measurement", "bootcamp"]
-step = 1
-tier = 1
-estimate = "4-5 hours"
-bootcamp = 4
-+++
+# Step 1: What Evaluations Actually Measure
 
-Step 1 of 9 in Bootcamp IV: Evaluation & Adversarial Testing.
+**The Measurement Problem as Foundation**
 
----
+**Estimated time:** 4-5 hours
+**Field maturity:** ESTABLISHED core (construct validity, Goodhart's law), EMERGING for LLM-specific challenges (contamination detection, dynamic benchmarks)
+**Prerequisites:** Bootcamp II Step 1 (LLM fundamentals - you need the transformer architecture model)
+**Leads to:** Step 2 (Eval Dataset Design - building the datasets whose quality depends on understanding what you are measuring)
 
 Step 1 of 9 in the Evaluation & Adversarial Testing Bootcamp.
 
@@ -1635,4 +1629,3 @@ JSONL dataset format, sampling strategies, edge case design, synthetic data gene
 and its limits, data versioning, and the held-out test set discipline. Every dataset
 design decision is a construct validity decision - the cases you include define what
 the eval measures, and the cases you exclude define what it misses.
-

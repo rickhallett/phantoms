@@ -31,6 +31,12 @@ BOOTCAMP_META = {
     "subtitle": "Step {step} of 10 in Bootcamp III: Operational Analytics.",
     "total_steps": 10,
   },
+  4: {
+    "docs_prefix": "step-iv-",
+    "hugo_prefix": "iv-",
+    "subtitle": "Step {step} of 9 in Bootcamp IV: Evaluation & Adversarial Testing.",
+    "total_steps": 9,
+  },
 }
 
 

@@ -1,17 +1,11 @@
-+++
-title = "Building an Eval Culture"
-date = "2026-03-10"
-description = "Eval review, ownership, roadmaps, sharing, continuous evaluation in production."
-tags = ["evals", "culture", "enterprise", "bootcamp"]
-step = 9
-tier = 3
-estimate = "3-4 hours"
-bootcamp = 4
-+++
+# Step 9: Building an Eval Culture
 
-Step 9 of 9 in Bootcamp IV: Evaluation & Adversarial Testing.
+**From Individual Skill to Organisational Practice**
 
----
+**Estimated time:** 3-4 hours
+**Field maturity:** EMERGING
+**Prerequisites:** All previous steps (1-8), Bootcamp II Step 10 (governance)
+**Leads to:** This is the final step. See [What to Read Next](#9-what-to-read-next) for where to go from here.
 
 Step 9 of 9 in the Evaluation & Adversarial Testing Bootcamp.
 
@@ -1371,4 +1365,3 @@ The field is moving fast. The tools, the techniques, and the organisational prac
 described in this bootcamp will evolve. The measurement discipline - understanding what
 you are measuring, why you are measuring it, and what the measurement can and cannot
 tell you - will not. That discipline is the durable skill.
-

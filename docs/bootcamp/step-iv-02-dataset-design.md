@@ -1,17 +1,11 @@
-+++
-title = "Designing Eval Datasets and Success Criteria"
-date = "2026-03-10"
-description = "Success criteria, edge cases, synthetic data, held-out test sets, dataset versioning."
-tags = ["evals", "datasets", "bootcamp"]
-step = 2
-tier = 1
-estimate = "5-6 hours"
-bootcamp = 4
-+++
+# Step 2: Designing Eval Datasets and Success Criteria
 
-Step 2 of 9 in Bootcamp IV: Evaluation & Adversarial Testing.
+**The Data That Determines What Your Eval Measures**
 
----
+**Estimated time:** 5-6 hours
+**Field maturity:** ESTABLISHED
+**Prerequisites:** Step 1 (Eval Epistemology - you need the construct validity and measurement error model)
+**Leads to:** Step 3 (Scoring and Grading Methods - you need datasets before you can score them)
 
 Step 2 of 9 in the Evaluation & Adversarial Testing Bootcamp.
 
@@ -1523,4 +1517,3 @@ you build in Step 3. Every scoring decision - what metric to use, what threshold
 set, how to aggregate across dimensions - depends on the dataset being well-constructed.
 A well-designed scorer on a poor dataset amplifies the dataset's flaws. A simple scorer
 on a good dataset produces actionable signal.
-

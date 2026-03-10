@@ -1,17 +1,11 @@
-+++
-title = "Adversarial Testing Methodology"
-date = "2026-03-10"
-description = "Structured adversarial testing, prompt injection, multi-model review, anti-pattern detection."
-tags = ["adversarial", "red-team", "testing", "bootcamp"]
-step = 6
-tier = 2
-estimate = "5-6 hours"
-bootcamp = 4
-+++
+# Step 6: Adversarial Testing Methodology
 
-Step 6 of 9 in Bootcamp IV: Evaluation & Adversarial Testing.
+**From Ad Hoc Exploration to Repeatable Engineering**
 
----
+**Estimated time:** 5-6 hours
+**Field maturity:** FRONTIER
+**Prerequisites:** Steps 1-4 (eval epistemology, dataset design, scoring, agent evaluation), Bootcamp II Step 7 (human-AI interface)
+**Leads to:** Step 7 (Red Teaming for Safety-Critical Capabilities - applying this methodology to dangerous capability evaluation)
 
 Step 6 of 9 in the Evaluation & Adversarial Testing Bootcamp.
 
@@ -2034,4 +2028,3 @@ anti-pattern detection. The threat models become more serious. The severity
 classifications carry higher stakes. The documentation requirements become more rigorous.
 The fundamental approach - structured, repeatable, documented, honest about its
 limitations - remains the same.
-

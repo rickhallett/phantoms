@@ -1,17 +1,11 @@
-+++
-title = "Interpreting and Communicating Eval Results"
-date = "2026-03-10"
-description = "Confidence intervals, honest model comparison, eval limitations, avoiding eval theatre."
-tags = ["evals", "statistics", "communication", "bootcamp"]
-step = 8
-tier = 3
-estimate = "3-4 hours"
-bootcamp = 4
-+++
+# Step 8: Interpreting and Communicating Eval Results
 
-Step 8 of 9 in Bootcamp IV: Evaluation & Adversarial Testing.
+**From Scores to Decisions**
 
----
+**Estimated time:** 3-4 hours
+**Field maturity:** EMERGING
+**Prerequisites:** Steps 1-3 (eval epistemology, dataset design, scoring methods), Bootcamp III Steps 2 and 4 (probability, statistical testing)
+**Leads to:** Step 9 (Building an Eval Culture - embedding honest interpretation into team practice)
 
 Step 8 of 9 in the Evaluation & Adversarial Testing Bootcamp.
 
@@ -726,43 +720,23 @@ findings against production incident data.
 
 ## 7. Key Concepts / Vocabulary
 
-- **Point estimate** - a single number (e.g., 85% accuracy) computed from a sample.
-  It is not the true value; it is a sample statistic.
-
-- **Confidence interval (CI)** - a range around a point estimate that quantifies
-  sampling uncertainty. A 95% CI means: if you repeated the experiment many times, 95%
-  of the computed intervals would contain the true value.
-
-- **Bootstrap** - a resampling method for computing confidence intervals without
-  distributional assumptions. Resample with replacement, compute the statistic, repeat.
-
-- **Statistical significance** - the probability (p-value) that the observed difference
-  would occur by chance if there were no true difference. Small p-values suggest the
-  difference is real, not an artifact of sampling.
-
-- **McNemar's test** - a statistical test for comparing two models evaluated on the
-  same test set. Focuses on discordant pairs (cases where the models disagree).
-
-- **Multiple comparisons problem** - when you test many comparisons, some will be
-  "significant" by chance. More tests = more false positives.
-
-- **Bonferroni correction** - divide the significance threshold by the number of
-  tests to control the family-wise error rate.
-
-- **Sufficiency threshold** - the minimum eval score required for a deployment
-  decision. Context-dependent: 85% may be sufficient for content classification and
-  insufficient for medical diagnosis.
-
-- **Eval theatre** - running evaluations for compliance optics rather than genuine
-  insight. The eval version of security theatre. Produces numbers that look rigorous
-  but do not inform decisions.
-
-- **Eval report** - a decision document that communicates eval results, methodology,
-  limitations, and conditional recommendations to stakeholders.
-
-- **Population mismatch** - the gap between the population sampled by the eval dataset
-  and the population the model will serve in production. Determines how well eval
-  scores predict production performance.
+- **Point estimate** - a single number (e.g., 85%) computed from a sample. Not the
+  true value; a sample statistic.
+- **Confidence interval (CI)** - range quantifying sampling uncertainty. 95% CI: if
+  repeated many times, 95% of intervals would contain the true value.
+- **Bootstrap** - resampling method for CIs without distributional assumptions.
+- **Statistical significance** - p-value: probability the observed difference would
+  occur by chance if no true difference exists.
+- **McNemar's test** - paired comparison test focusing on discordant pairs (cases
+  where models disagree).
+- **Multiple comparisons problem** - more tests = more false positives by chance.
+- **Bonferroni correction** - divide significance threshold by number of tests.
+- **Sufficiency threshold** - minimum score for deployment. Context-dependent.
+- **Eval theatre** - evaluations for compliance optics rather than genuine insight.
+- **Eval report** - decision document: results, methodology, limitations,
+  recommendations.
+- **Population mismatch** - gap between eval sample population and production
+  population.
 
 ---
 
@@ -1002,4 +976,3 @@ Step 8 are the foundation of eval culture. A team that reports results honestly,
 limitations prominently, and uses conditional recommendations is a team that can make
 good deployment decisions. A team that reports headline numbers without context is
 performing eval theatre regardless of how technically sophisticated their evals are.
-
