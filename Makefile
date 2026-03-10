@@ -92,6 +92,26 @@ swarm:
 	@echo "▶ Multi-container orchestration (C3) — N=$(N)"
 	@N=$(N) bash test-c3.sh
 
+# ── Crew ──────────────────────────────────────────────────────
+#
+# C4: governance crew as physical agents.
+# Deterministic test: proves mount constraints + orchestration plumbing.
+# Live crew run: requires API keys, dispatches real LLM agents.
+# Usage:
+#   make crew-test            deterministic plumbing test (gate-safe)
+#   make crew                 live LLM crew run (requires ANTHROPIC_API_KEY)
+
+crew-test:
+	@echo "▶ Governance crew plumbing (C4 — deterministic)"
+	@bash test-c4.sh
+
+crew:
+	@if [ -z "$(ANTHROPIC_API_KEY)" ]; then \
+		echo "ERROR: ANTHROPIC_API_KEY not set"; exit 1; \
+	fi
+	@echo "▶ Live crew orchestration (C4 — LLM, costs API calls)"
+	@ANTHROPIC_API_KEY=$(ANTHROPIC_API_KEY) bash orchestrate.sh
+
 # ── Polecat Wrapper ───────────────────────────────────────────
 #
 # Observable, permission-safe, timeout-guarded.
@@ -286,7 +306,7 @@ ebook-clean:
 	rm -rf $(EBOOK_BUILD) $(EBOOK_SLIM_BUILD)
 	@echo "Ebook build directories cleared."
 
-.PHONY: all status graph clean install-hooks gate interop swarm
+.PHONY: all status graph clean install-hooks gate interop swarm crew-test crew
 .PHONY: ebook ebook-prep ebook-epub ebook-slim ebook-slim-prep ebook-slim-epub ebook-all ebook-clean
 .PHONY: darkcat darkcat-openai darkcat-gemini darkcat-all darkcat-synth darkcat-ref
-.PHONY: gauntlet gauntlet-gate gauntlet-interop gauntlet-swarm gauntlet-pitkeel
+.PHONY: gauntlet gauntlet-gate gauntlet-interop gauntlet-swarm gauntlet-crew gauntlet-pitkeel

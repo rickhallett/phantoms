@@ -40,6 +40,15 @@ gauntlet-swarm:
 		exit 1; \
 	fi
 
+gauntlet-crew:
+	@echo "▶ Crew (C4)"
+	@if $(MAKE) crew-test; then \
+		$(PITCOMMIT) attest crew --tree $(TREE_FULL) --verdict pass; \
+	else \
+		$(PITCOMMIT) attest crew --tree $(TREE_FULL) --verdict fail; \
+		exit 1; \
+	fi
+
 gauntlet-pitkeel:
 	@echo "▶ Pitkeel signals"
 	@cd pitkeel && uv run python pitkeel.py
@@ -64,18 +73,24 @@ gauntlet:
 	fi
 	@if [ "$(TIER)" = "full" ]; then \
 		echo ""; \
-		echo "── 3/5 Swarm ──"; \
+		echo "── 3/6 Swarm ──"; \
 		echo ""; \
 		$(MAKE) gauntlet-swarm; \
 	fi
 	@if [ "$(TIER)" = "full" ]; then \
 		echo ""; \
-		echo "── 4/5 Darkcat ──"; \
+		echo "── 4/6 Crew ──"; \
+		echo ""; \
+		$(MAKE) gauntlet-crew; \
+	fi
+	@if [ "$(TIER)" = "full" ]; then \
+		echo ""; \
+		echo "── 5/6 Darkcat ──"; \
 		echo ""; \
 		$(MAKE) darkcat-all; \
 	fi
 	@if [ "$(TIER)" = "full" ]; then \
-		echo ""; echo "── 5/5 Pitkeel ──"; \
+		echo ""; echo "── 6/6 Pitkeel ──"; \
 	else \
 		echo ""; echo "── 2/2 Pitkeel ──"; \
 	fi

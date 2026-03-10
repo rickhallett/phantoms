@@ -76,4 +76,5 @@ A1: adapt the gate. Rewrite `make gate` to build the container and run `test-poc
 | B3 | 2026-03-10 | 550bcd2 | gauntlet wired: .env loaded, gate+pitkeel attest pass (TIER=wip) |
 | C1 | 2026-03-10 | 550bcd2 | jobrunner: shell_command task, YAML in/out, 5/5 passing. Gate: 34/34 |
 | C2 | 2026-03-10 | 8f517a9 | inter-container: shared volume, producer/consumer jobs, convergence check. Interop: 9/9. Gate: 34/34 |
-| C3 | 2026-03-10 | - | swarm: Docker Compose, N workers, atomic job acquisition, volume init. Swarm: 7/7. Gate: 34/34 |
+| C3 | 2026-03-10 | b88c251 | swarm: Docker Compose, N workers, atomic job acquisition, volume init. Swarm: 7/7. Gate: 34/34 |
+| C4 | 2026-03-10 | - | crew: role identities, mount constraints (ro/rw), orchestrator, docker inspect proof. Crew-test: 10/10. Gate: 35/35 |
