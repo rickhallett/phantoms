@@ -48,7 +48,7 @@ BOOTCAMP_META = {
     "docs_prefix": "bcv-",
     "hugo_prefix": "v-",
     "subtitle": "Step {step} of 9 in Bootcamp V: Agent Infrastructure in Practice.",
-    "total_steps": 8,
+    "total_steps": 9,
   },
 }
 

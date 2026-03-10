@@ -1,15 +1,10 @@
-+++
-title = "Production Patterns"
-date = "2026-03-10"
-description = "Rate limiting, fallback chains, scaling, deployment patterns, cost controls, reliability."
-tags = ["production", "deployment", "scaling", "bootcamp"]
-step = 9
-tier = 3
-estimate = "4-5 hours"
-bootcamp = 5
-+++
+# Step 9: Production Patterns - The Capstone
 
-Step 9 of 9 in Bootcamp V: Agent Infrastructure in Practice.
+**Estimated time:** 4-5h
+**Field maturity:** Emerging
+**Prerequisites:** Steps 1-8 (all previous BCV steps), **Bootcamp I Step 9 (containers)**, **Bootcamp III Step 8 (cost modelling)**, **Bootcamp IV Step 5 (eval in CI/CD)**
+**Leads to:** Production deployment of agent systems
+**You will need:** Python 3.10+, `tenacity` (`uv pip install tenacity`), `redis` (`uv pip install redis`) for queue examples
 
 ---
 
@@ -1980,4 +1975,3 @@ The path forward is application. Take a real agent system - whether a code revie
 The gap between knowing these patterns and applying them under pressure is where the real learning happens. The first production incident will teach you more about fallback chains than any exercise. The first cost spike will teach you more about budget controls than any simulation. The first prompt injection attempt will teach you more about defence in depth than any OWASP reference.
 
 Build it. Ship it. Watch it. Fix it. That is the engineering loop, all the way down.
-
