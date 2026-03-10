@@ -56,6 +56,8 @@ gate:
 	@docker run --rm $(MIDGET_IMAGE) /opt/test-ocr.sh
 	@echo "▶ Running Chromium test suite inside container..."
 	@docker run --rm $(MIDGET_IMAGE) /opt/test-chromium.sh
+	@echo "▶ Running agent framework test suite inside container..."
+	@docker run --rm $(MIDGET_IMAGE) /opt/test-agent.sh
 
 # ── Polecat Wrapper ───────────────────────────────────────────
 #
@@ -151,6 +153,33 @@ graph:
 	@echo "B1 SPEC.md"
 	@echo "├── B2 (see above)"
 	@echo "└── B4 EVAL.md"
+
+# ── Agent Live Run ────────────────────────────────────────────
+#
+# Runs a real claude task inside the container.
+# Requires ANTHROPIC_API_KEY to be set in the environment.
+# Not part of the gate (non-deterministic, costs API calls).
+# Usage: make agent-live TASK="clone repo X, run tests, report"
+
+AGENT_TASK ?= Use drive to create a tmux session called 'work', run 'echo CLAUDE_INSIDE_MIDGET', capture the output with drive logs, then report back the exact output you saw.
+
+agent-live:
+	@if [ -z "$(ANTHROPIC_API_KEY)" ]; then \
+		echo "ERROR: ANTHROPIC_API_KEY not set"; exit 1; \
+	fi
+	@echo "▶ Running live agent task inside midget container..."
+	@echo "  Task: $(AGENT_TASK)"
+	@docker run --rm \
+		-e ANTHROPIC_API_KEY=$(ANTHROPIC_API_KEY) \
+		-e DISPLAY=:99 \
+		$(MIDGET_IMAGE) \
+		bash -c 'Xvfb :99 -screen 0 1280x720x24 -ac & sleep 1; \
+		         fluxbox -display :99 & sleep 1; \
+		         claude -p "$(AGENT_TASK)" \
+		           --dangerously-skip-permissions \
+		           --allowedTools "Bash"'
+
+.PHONY: agent-live
 
 install-hooks:
 	@ln -sf ../../scripts/pre-commit .git/hooks/pre-commit
