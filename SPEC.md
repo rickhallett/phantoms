@@ -153,6 +153,31 @@ This is the distinction between governance-by-prompt (current state of the art) 
 
 ---
 
+## Operational Findings
+
+Discovered during implementation. Each entry is a constraint that affects C3 and C4
+design. Any agent working on multi-container coordination must read this section first.
+
+**Volume ownership (C2, 2026-03-10).** Named Docker volumes initialise with root
+ownership. The `agent` user (uid 1000) cannot write to a freshly mounted volume. Any
+container that needs to write to a shared volume - including the jobrunner - requires
+the directory tree to be initialised with correct ownership before it runs. The fix is
+a one-time root init container:
+
+```bash
+docker run --rm --entrypoint bash -u root \
+    -v <volume>:/opt/jobs <image> \
+    -c "mkdir -p /opt/jobs/incoming /opt/jobs/done /opt/jobs/artifacts \
+        && chown -R 1000:1000 /opt/jobs"
+```
+
+This must be the first step in any swarm startup sequence. In Docker Compose (C3), it
+maps to an `init` service with `restart: no` that completes before the worker services
+start. Skipping it causes silent permission failures - the jobrunner exits non-zero but
+the error is easy to miss if container stdout is suppressed.
+
+---
+
 ## What Would Prove the Thesis
 
 See EVAL.md (B4) for full success/failure criteria. Short form:
