@@ -113,6 +113,95 @@ Step 1: Process model (fork/exec/fd/pipe/signal)
 - All code examples runnable on Arch Linux / Debian / Ubuntu
 - No emojis, no em-dashes
 
+---
+
+## Bootcamp III: Operational Analytics for Agentic Engineering
+
+**Prerequisites:** Bootcamp I (Steps 1-5 especially), Bootcamp II (agentic practices)
+**Status:** ACTIVE - learning materials under construction
+**Total estimated time: 32-40 hours**
+
+The 20% of data science that does 80% of the heavy lifting for agentic engineers.
+Agents generate structured data (YAML metrics, TSV logs, review findings, cost records).
+This bootcamp teaches the analytical skills to turn that data into operational decisions.
+
+### Dependency Graph
+
+```
+Step 1: Tabular data (pandas, DuckDB)
+├── Step 2: Descriptive statistics
+│   ├── Step 4: Statistical testing
+│   └── Step 5: Time series basics
+├── Step 3: SQL analytics (DuckDB)
+│   └── Step 5: Time series basics
+├── Step 6: Visualization
+├── Step 7: Log analysis patterns
+└── Step 8: Cost modeling
+
+Step 9: Text analysis basics (independent, can start after Step 1)
+Step 10: Notebook workflows (independent, can start any time)
+```
+
+### Tier 1 - Foundations (everything else depends on these)
+
+| Step | Topic | Est. Time | File |
+|------|-------|-----------|------|
+| 1 | Tabular data with pandas and DuckDB | 4-5h | [bootcamp3-01-tabular-data.md](bootcamp3-01-tabular-data.md) |
+| 2 | Descriptive statistics | 3-4h | [bootcamp3-02-descriptive-stats.md](bootcamp3-02-descriptive-stats.md) |
+| 3 | SQL analytics with DuckDB | 4-5h | [bootcamp3-03-sql-analytics.md](bootcamp3-03-sql-analytics.md) |
+
+### Tier 2 - Core Analysis (skills that answer operational questions)
+
+| Step | Topic | Est. Time | File |
+|------|-------|-----------|------|
+| 4 | Statistical testing for practitioners | 3-4h | [bootcamp3-04-statistical-testing.md](bootcamp3-04-statistical-testing.md) |
+| 5 | Time series basics | 3-4h | [bootcamp3-05-time-series.md](bootcamp3-05-time-series.md) |
+| 6 | Visualization for decision-making | 4-5h | [bootcamp3-06-visualization.md](bootcamp3-06-visualization.md) |
+
+### Tier 3 - Applied (domain-specific agentic analytics)
+
+| Step | Topic | Est. Time | File |
+|------|-------|-----------|------|
+| 7 | Log analysis patterns | 3-4h | [bootcamp3-07-log-analysis.md](bootcamp3-07-log-analysis.md) |
+| 8 | Cost modeling for API-based systems | 3-4h | [bootcamp3-08-cost-modeling.md](bootcamp3-08-cost-modeling.md) |
+| 9 | Text analysis basics | 3-4h | [bootcamp3-09-text-analysis.md](bootcamp3-09-text-analysis.md) |
+| 10 | Notebook-based analysis workflows | 2-3h | [bootcamp3-10-notebook-workflows.md](bootcamp3-10-notebook-workflows.md) |
+
+### Tool Stack
+
+| Tool | Role | Install |
+|------|------|---------|
+| pandas | Tabular data manipulation | `uv pip install pandas` |
+| DuckDB | SQL analytics on local files | `uv pip install duckdb` |
+| matplotlib | Plotting and visualization | `uv pip install matplotlib` |
+| seaborn | Statistical visualization | `uv pip install seaborn` |
+| scipy | Statistical tests | `uv pip install scipy` |
+| scikit-learn | TF-IDF, simple classification | `uv pip install scikit-learn` |
+| jupyter | Notebook environment | `uv pip install jupyter` |
+| statsmodels | Time series decomposition | `uv pip install statsmodels` |
+
+### Sequencing Recommendation
+
+**Week 1 (12-14h):** Steps 1, 2, 3 - tabular data, descriptive stats, SQL analytics.
+These unlock all downstream steps and are immediately useful.
+
+**Week 2 (10-13h):** Steps 6, 7, 10 - visualization, log analysis, notebooks. Daily-use
+skills that compound with Steps 1-3.
+
+**Week 3 (9-12h):** Steps 4, 5, 8 - statistical testing, time series, cost modeling.
+Analytical depth that turns data reading into data reasoning.
+
+**As needed:** Step 9 - text analysis. Most useful when working on finding matching,
+output comparison, or content quality signals.
+
+### Cross-references to Bootcamp I
+
+- Bootcamp I Step 4 (text pipeline) -> Bootcamp III Step 7 (log analysis patterns)
+- Bootcamp I Step 5 (Python CLI) -> Bootcamp III Step 1 (tabular data)
+- Bootcamp I Step 5.10 (Jupyter) -> Bootcamp III Step 10 (notebook workflows)
+
+---
+
 ## Provenance
 
 Ranking criteria from the taxonomy review:

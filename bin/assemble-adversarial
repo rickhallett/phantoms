@@ -55,12 +55,44 @@ VECTOR_LABELS = {
 
 
 def extract_yaml(content):
-    """Extract the YAML block from a response markdown file."""
-    match = re.search(r"```yaml\s*\n(.*?)```", content, re.DOTALL)
-    if not match:
+    """Extract the findings YAML block from a response markdown file.
+    
+    Looks for YAML blocks that contain 'findings:' - this skips template
+    examples and HUD blocks that models may echo back from the instructions.
+    Falls back to the last YAML block if no findings-specific block is found.
+    """
+    # Find all YAML blocks
+    blocks = re.findall(r"```yaml\s*\n(.*?)```", content, re.DOTALL)
+    if not blocks:
         return None
+    
+    # Prefer blocks that contain actual findings (not template placeholders)
+    for block in blocks:
+        if "findings:" in block and "<one of the vectors" not in block and "prompt_id:" not in block.split("findings:")[0][-200:] or False:
+            try:
+                parsed = yaml.safe_load(block)
+                if parsed and "findings" in parsed and isinstance(parsed["findings"], list):
+                    # Check it has real findings, not template
+                    if parsed["findings"] and isinstance(parsed["findings"][0], dict):
+                        first = parsed["findings"][0]
+                        if first.get("attack_vector", "").startswith("AV-"):
+                            return parsed
+            except yaml.YAMLError:
+                continue
+    
+    # Fallback: try each block from last to first
+    for block in reversed(blocks):
+        try:
+            parsed = yaml.safe_load(block)
+            if parsed and "findings" in parsed and isinstance(parsed["findings"], list):
+                if parsed["findings"] and isinstance(parsed["findings"][0], dict):
+                    return parsed
+        except yaml.YAMLError:
+            continue
+    
+    # Last resort: try the last block
     try:
-        return yaml.safe_load(match.group(1))
+        return yaml.safe_load(blocks[-1])
     except yaml.YAMLError as e:
         print(f"  YAML parse error: {e}", file=sys.stderr)
         return None
