@@ -8,7 +8,7 @@ A Docker container is an agent's workspace. The agent boots into its own Linux e
 
 This project builds the infrastructure for agent swarms: multiple containerised agents, each with a defined role, operating in parallel on composable units of software.
 
-## Concept — Proven
+## Concept - Proven
 
 A Docker container (Ubuntu 24.04 + Xvfb + fluxbox + xdotool + scrot) where an AI agent can see the screen, click, type, and control applications through a `steer` CLI wrapper. 10/10 tests passed.
 
@@ -24,9 +24,9 @@ midgets/
 
 On Linux, you create bespoke, minimal, agent-native software. The machine is the agent's sandbox.
 
-1. **Agent-native software** — text interfaces, composable primitives, structured feedback. Built for agents, not adapted from human GUI apps.
-2. **Operational training** — through trial and error, the human-agent system develops custom conventions that compound over time. Distinct from ML training. The conventions are the primary output.
-3. **Linux as agent OS** — Linux never abandoned the CLI. Every GUI is optional. The system is fully operable from a terminal.
+1. **Agent-native software** - text interfaces, composable primitives, structured feedback. Built for agents, not adapted from human GUI apps.
+2. **Operational training** - through trial and error, the human-agent system develops custom conventions that compound over time. Distinct from ML training. The conventions are the primary output.
+3. **Linux as agent OS** - Linux never abandoned the CLI. Every GUI is optional. The system is fully operable from a terminal.
 
 ## Roadmap
 
