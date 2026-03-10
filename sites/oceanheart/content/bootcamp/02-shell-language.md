@@ -39,21 +39,26 @@ The shell is a process launcher, not a programming language.
 
 Then contradict this.
 
-At its core, here is what the shell does on every line of input:
+At its core, here is what the shell does for external commands:
 
 1. Read a line
-2. Split it into words
-3. Find a command (built-in, function, or external binary in `$PATH`)
-4. `fork()` a child process
-5. `exec()` the command in the child
-6. `wait()` for it to finish
-7. Check the exit code
-8. Repeat
+2. Parse it (tokenize, identify operators, apply grammar)
+3. Perform expansions (parameter, command substitution, arithmetic, etc.)
+4. Find the command (built-in, function, or external binary in `$PATH`)
+5. For external commands: `fork()` a child process, `exec()` the command in the child, `wait()` for it to finish
+6. Check the exit code
+7. Repeat
 
-That is it. Everything else - variables, control flow, functions, redirection, quoting
-rules, expansion, globbing - was bolted on top of this loop over decades. The Bourne
-shell (1979) added programming constructs. Bash (1989) added more. POSIX standardised
-a subset. But the core loop never changed.
+Builtins (`cd`, `echo`, `[`, `export`) and shell functions execute in the current
+process - no fork/exec. Variable assignments and compound commands (`if`, `while`,
+`{ ... }`) also run without forking. The fork/exec/wait cycle is specifically for
+launching external binaries. But it is the *defining* operation - the thing that makes
+the shell a shell rather than a programming language.
+
+Everything else - variables, control flow, functions, redirection, quoting
+rules, expansion, globbing - was bolted on top of this process-launching loop over
+decades. The Bourne shell (1979) added programming constructs. Bash (1989) added more.
+POSIX standardised a subset. But the core purpose never changed.
 
 This explains every quirk you will encounter:
 
@@ -61,16 +66,17 @@ This explains every quirk you will encounter:
   checks its exit code. `if grep -q pattern file; then ...` works because `grep` returns
   0 (success) or 1 (failure). There is no true/false type - there are only exit codes.
 
-- **Why `[ ]` has spaces.** `[` is a command (`/usr/bin/[` on disk). `[ -f foo ]` is
-  the command `[` with arguments `-f`, `foo`, and `]`. The spaces are argument delimiters,
-  not style.
+- **Why `[ ]` has spaces.** `[` is a command. In bash it is a shell builtin; an external
+  version also exists at `/usr/bin/[`. Either way, `[ -f foo ]` is the command `[` with
+  arguments `-f`, `foo`, and `]`. The spaces are argument delimiters, not style.
 
 - **Why variable assignment has no spaces.** `var=value` is an assignment. `var = value`
   runs the command `var` with arguments `=` and `value`. The parser distinguishes these
   by looking for the `=` with no surrounding whitespace.
 
-- **Why quoting matters.** The shell performs word splitting between step 2 and step 5.
-  If a variable contains spaces, the shell splits it into multiple words, and each word
+- **Why quoting matters.** After the shell expands variables (parameter expansion), it
+  performs word splitting on the *results* of unquoted expansions. This is a separate
+  step from the initial parsing/tokenization. If a variable contains spaces, the shell splits it into multiple words, and each word
   becomes a separate argument to the command. This is not a bug - it is the design.
 
 Now the contradiction: the shell IS a programming language. It has variables, conditionals,
@@ -101,9 +107,10 @@ invocation specification. Forgetting either aspect produces bugs.
 ### Verify it yourself
 
 ```bash
-# Prove that [ is a command
-which [
-# /usr/bin/[
+# Prove that [ is a command (type -a shows builtins AND externals)
+type -a [
+# [ is a shell builtin
+# [ is /usr/bin/[
 
 ls -la /usr/bin/[
 # -rwxr-xr-x 1 root root ... /usr/bin/[
@@ -349,8 +356,8 @@ echo "${cache_dir:=/tmp/cache}"  # assigns AND uses the default
 # If DATABASE_URL is unset, prints error message and exits with code 1
 # The : command is a no-op (true) - it exists solely to trigger the expansion
 
-# ${var:+alternate} - use alternate if var IS set
-echo "${DEBUG:+--verbose}"     # prints --verbose only if DEBUG is set
+# ${var:+alternate} - use alternate if var is set AND non-null
+echo "${DEBUG:+--verbose}"     # prints --verbose only if DEBUG is set and non-empty
 ```
 
 **String stripping (prefix and suffix removal):**
@@ -736,7 +743,7 @@ name=""
 echo ${BASH_REMATCH[0]}   # the full match
 
 # Logical operators inside the brackets
-[[ -f file && -r file ]]   # AND (cannot do this with [ ])
+[[ -f file && -r file ]]   # AND (with [ ] you need: [ -f file ] && [ -r file ])
 [[ -f file || -d file ]]   # OR
 
 # Safe with unquoted variables (but quote anyway for clarity)
@@ -1154,11 +1161,14 @@ set -e
 # This exits on failure (single command)
 false
 
-# This does NOT exit on failure (false is part of a compound command)
-false; true    # false fails, but true succeeds, so the compound succeeds
+# This does NOT exit on failure (false is tested as part of a conditional)
+if false; then echo "yes"; fi   # -e is suppressed in if/while conditions
 
-# This exits (both fail)
-false; false
+# This also survives (short-circuit is an errexit exemption)
+false || true    # false fails, but || makes it part of a conditional chain
+
+# But this DOES exit (semicolon list is NOT an exemption)
+false; true      # bash exits at false - a ; list is sequential, not conditional
 ```
 
 The rule: `set -e` is a safety net, not a guarantee. It catches gross errors. It does
@@ -1740,8 +1750,9 @@ Annotate every line. For each line, answer:
    the entire recipe is one shell invocation, but the `define` block still uses
    continuation for the make parser.
 6. **What does `timeout 300 command` do at the process level?** (Connect to Step 1:
-   timeout forks the command as a child, starts a timer, sends SIGTERM after 300s,
-   then SIGKILL after a grace period. Exit code 124 means the timeout fired.)
+    timeout forks the command as a child, starts a timer, sends SIGTERM after 300s.
+    It does NOT automatically send SIGKILL - that requires the `-k` flag, e.g.
+    `timeout -k 10 300 command`. Exit code 124 means the timeout fired.)
 7. **What is the delta detection doing?** It captures git state before and after the
    polecat run. If HEAD, diff stat, and untracked files are all identical, the polecat
    produced no changes and it is treated as a failure.
@@ -1753,9 +1764,14 @@ Annotate every line. For each line, answer:
 
 ### Bonus
 
-Identify what would break if `.ONESHELL:` were removed from the Makefile. (Hint: each
-line would be a separate shell invocation, and variables set on one line would not be
-available on the next.)
+1. Identify what would break if `.ONESHELL:` were removed from the Makefile. (Hint: each
+   line would be a separate shell invocation, and variables set on one line would not be
+   available on the next.)
+
+2. There is a real bug in this wrapper. `EXIT_CODE=$$?` captures the exit code of `tee`,
+   not `timeout`, because `$?` returns the exit code of the last command in a pipeline.
+   Without `set -o pipefail`, the timeout exit code (124) is lost if `tee` succeeds.
+   What would you need to change to fix this?
 
 ---
 
@@ -1842,7 +1858,9 @@ url="https://example.com/api?foo=bar&baz=qux"
 curl $url
 ```
 
-**Hint:** Two problems. One is quoting. The other is `&` in a shell context.
+**Hint:** The quoting problem. Without quotes, `$url` is subject to word splitting
+(spaces would break it) and glob expansion (`?` is a glob character that matches any
+single character in filenames). Quote it: `curl "$url"`.
 
 ### Gotcha 8
 
@@ -1911,7 +1929,7 @@ ${var}              # basic expansion
 ${var:-default}     # default if unset/empty
 ${var:=default}     # assign default if unset/empty
 ${var:?error}       # error if unset/empty
-${var:+alternate}   # alternate if set/non-empty
+${var:+alternate}   # alternate if set and non-null
 ${var#pattern}      # strip shortest prefix
 ${var##pattern}     # strip longest prefix
 ${var%pattern}      # strip shortest suffix

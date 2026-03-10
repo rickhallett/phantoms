@@ -429,7 +429,7 @@ rg "SELECT" --type sql                 # only SQL files
 rg -F "user.name?.first" src/          # literal dots and question marks
 
 # JSON output (machine-readable)
-rg --json "error" app.log | jq '.data.lines.text'
+rg --json "error" app.log | jq -r 'select(.type == "match") | .data.lines.text'
 
 # Count matches per file
 rg -c "TODO" src/ | sort -t: -k2 -n -r | head -10
@@ -531,7 +531,7 @@ This is where you initialize counters and print summaries.
 awk 'END { print NR }' file.txt
 
 # Sum a column
-awk '{ sum += $3 } END { print "Total:", sum }' sales.csv
+awk -F, '{ sum += $3 } END { print "Total:", sum }' sales.csv
 
 # Average
 awk '{ sum += $2; n++ } END { print "Average:", sum/n }' scores.txt
@@ -1154,7 +1154,7 @@ SAMPLE
 1. `sort_by` takes a path expression. Use negative for descending.
 2. `map(select(...)) | map(.field) | add`
 3. `group_by(.language) | map({...})`
-4. `select` supports `and`. Check `topics` with `any(. == "backend"; .topics[])` or the `contains` function.
+4. `select` supports `and`. Check `topics` with `any(.topics[]; . == "backend")` or the `contains` function.
 5. `length` counts array elements. `unique` deduplicates.
 6. Combine `group_by` with arithmetic in `map`.
 
@@ -1302,6 +1302,8 @@ awk -F, 'NR>1 {
   day_rev[$1] += $4 * $5
 }
 END {
+  # NOTE: asorti() is a gawk extension (not available in mawk/nawk).
+  # If using Debian/Ubuntu default awk, pipe through sort instead.
   n = asorti(day_rev, days)
   running = 0
   printf "%-12s %12s %12s\n", "Date", "Daily Rev", "Running Total"

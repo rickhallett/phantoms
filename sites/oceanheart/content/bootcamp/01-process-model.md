@@ -126,7 +126,7 @@ cat /proc/self/status | head -20
 
 Every field in `/proc/self/status` corresponds to a field in `task_struct`. The kernel
 is showing you its own bookkeeping. When you read `VmRSS` (resident set size), you are
-reading how much physical memory the kernel has allocated to this process's page tables.
+reading how much physical RAM is currently mapped into this process's address space (not page table memory, which is `VmPTE`).
 When you read `Threads`, you are reading the thread group size. This is not abstraction.
 This is the data structure.
 
