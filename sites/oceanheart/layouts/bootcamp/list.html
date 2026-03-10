@@ -1,0 +1,39 @@
+{{ define "main" }}
+<article class="bootcamp-index">
+  <header>
+    <h1>{{ .Title }}</h1>
+    {{ with .Description }}<p class="subtitle" style="color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 1rem;">{{ . }}</p>{{ end }}
+  </header>
+
+  <div class="content">
+    {{ .Content }}
+  </div>
+
+  {{ $tiers := dict
+    "1" "Tier 1: Foundational"
+    "2" "Tier 2: Composition"
+    "3" "Tier 3: Verification"
+    "4" "Tier 4: Advanced"
+  }}
+
+  {{ range $num, $label := $tiers }}
+  {{ $pages := where $.Pages "Params.tier" (int $num) }}
+  {{ if $pages }}
+  <div class="bootcamp-tier" style="margin-top: 2rem;">
+    <h2 style="font-size: 1rem; color: var(--cyan); margin-bottom: 0.75rem;">{{ $label }}</h2>
+    <div class="bootcamp-steps">
+      {{ range $pages.ByParam "step" }}
+      <a href="{{ .RelPermalink }}" class="bootcamp-step" style="display: block; padding: 0.75rem 0; border-bottom: 1px solid var(--border); text-decoration: none;">
+        <span style="color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.85rem;">step {{ .Params.step }}</span>
+        <span style="color: var(--text-primary); margin-left: 0.75rem;">{{ .Title }}</span>
+        {{ with .Params.estimate }}<span style="color: var(--text-secondary); font-size: 0.85rem; float: right;">{{ . }}</span>{{ end }}
+        {{ if .Params.sample }}<span style="color: var(--green); font-size: 0.8rem; margin-left: 0.5rem;">[sample]</span>{{ end }}
+        {{ if not .Params.sample }}<span style="color: var(--text-secondary); font-size: 0.8rem; margin-left: 0.5rem;">[coming]</span>{{ end }}
+      </a>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+  {{ end }}
+</article>
+{{ end }}

@@ -19,6 +19,10 @@ title = 'oceanheart.ai'
     url = '/research/'
     weight = 20
   [[menus.main]]
+    name = 'bootcamp'
+    url = '/bootcamp/'
+    weight = 22
+  [[menus.main]]
     name = 'slopodar'
     url = '/slopodar/'
     weight = 25

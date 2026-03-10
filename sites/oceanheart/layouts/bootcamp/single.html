@@ -1,0 +1,33 @@
+{{ define "main" }}
+<article>
+  <header>
+    <p style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem;">
+      <a href="/bootcamp/" style="color: var(--cyan); text-decoration: none;">bootcamp</a> / step {{ .Params.step }} of 12
+    </p>
+    <h1>{{ .Title }}</h1>
+    <div class="post-meta">
+      {{ with .Params.estimate }}<span style="font-family: var(--font-mono); font-size: 0.85rem;">{{ . }}</span>{{ end }}
+      {{ with .Params.tier }} · <span style="font-family: var(--font-mono); font-size: 0.85rem;">tier {{ . }}</span>{{ end }}
+      {{ with .Params.tags }}
+      · {{ range . }}<span class="post-tag">{{ . }}</span> {{ end }}
+      {{ end }}
+    </div>
+  </header>
+  <div class="content">
+    {{ .Content }}
+  </div>
+  <nav style="margin-top: 3rem; padding: 1.5rem 0; border-top: 1px solid var(--border); display: flex; justify-content: center; align-items: center; font-family: var(--font-mono); font-size: 1.1rem; gap: 2rem;">
+    {{ with .PrevInSection }}
+    <a href="{{ .RelPermalink }}" title="{{ .Title }}" style="color: var(--cyan); text-decoration: none;">&lsaquo;</a>
+    {{ else }}
+    <span style="color: var(--border);">&lsaquo;</span>
+    {{ end }}
+    <a href="/bootcamp/" style="color: var(--text-secondary); text-decoration: none;">index</a>
+    {{ with .NextInSection }}
+    <a href="{{ .RelPermalink }}" title="{{ .Title }}" style="color: var(--cyan); text-decoration: none;">&rsaquo;</a>
+    {{ else }}
+    <span style="color: var(--border);">&rsaquo;</span>
+    {{ end }}
+  </nav>
+</article>
+{{ end }}
