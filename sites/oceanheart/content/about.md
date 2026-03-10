@@ -10,7 +10,7 @@ I write TypeScript, Python, and Go. I've shipped production code at EDITED (reta
 
 ## What I'm building
 
-**[The Pit](https://thepit.cloud)** — an agentic evaluation arena. 11 specialised agents governed by integration discipline. Every session decision on file. The agents write code, review each other's work, and catch each other's mistakes. I govern the process by which their output becomes trustworthy. Cryptographically attested commits, multi-model adversarial review, operator fatigue monitoring. The [repo is public](https://github.com/rickhallett/noopit).
+**[The Pit](https://thepit.cloud)** — an agentic evaluation arena. 11 specialised agents governed by integration discipline. Every session decision on file. The agents write code, review each other's work, and catch each other's mistakes. I govern the process by which their output becomes trustworthy. Cryptographically attested commits, multi-model adversarial review, operator fatigue monitoring. The [repo is public](https://github.com/rickhallett/thepit-v2).
 
 **[The Agentic Engineering Bootcamp](/bootcamp/)** — 51 steps across 5 bootcamps. Self-study material I wrote for myself and am publishing because it might be useful to others. Covers Linux substrate, agentic practices, operational analytics, evaluation/adversarial testing, and agent infrastructure. The material came directly out of the practical problems I hit building The Pit.
 
@@ -28,4 +28,4 @@ I came to this from therapy, where the core skill is noticing when someone (incl
 
 - [kai@oceanheart.ai](mailto:kai@oceanheart.ai)
 - [github.com/rickhallett](https://github.com/rickhallett)
-- [linkedin.com/in/richardkaihallett](https://linkedin.com/in/richardkaihallett)
+- [linkedin.com/in/richardhallett86](https://www.linkedin.com/in/richardhallett86/)
