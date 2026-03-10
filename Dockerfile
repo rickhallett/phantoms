@@ -30,11 +30,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     procps \
     && rm -rf /var/lib/apt/lists/*
 
-# Node.js + Claude Code — agent framework
+# Node.js + agent CLIs — multi-model agent framework
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nodejs \
     npm \
-    && npm install -g @anthropic-ai/claude-code \
+    && npm install -g \
+        @anthropic-ai/claude-code \
+        @openai/codex \
+        @google/gemini-cli \
+        @mariozechner/pi-coding-agent \
+        opencode-ai \
     && rm -rf /var/lib/apt/lists/* /root/.npm
 
 # Google Chrome (stable) — Chromium via Google's apt .deb

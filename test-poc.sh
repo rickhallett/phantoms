@@ -54,7 +54,7 @@ fi
 
 # 4. steer apps launch xterm
 echo "[4/10] steer apps launch xterm"
-$STEER apps launch xterm --json >/dev/null 2>&1
+$STEER apps launch xterm --args "-fa DejaVuSansMono -fs 14" --json >/dev/null 2>&1
 sleep 1
 RESULT=$($STEER apps list --json 2>/dev/null)
 XTERM_FOUND=$(echo "$RESULT" | python3 -c "
@@ -105,7 +105,24 @@ if echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); assert 
 else
     fail "Hotkey failed"
 fi
-sleep 0.5
+sleep 1
+
+# 8b. Verify the command actually executed (not just that keystrokes were sent)
+# This closes the right-answer-wrong-work gap: tests 7+8 prove steer accepted
+# input, but only this check proves the terminal acted on it.
+echo "[8b/10] verify MIDGET_ALIVE in terminal output (OCR)"
+RESULT=$($STEER see --ocr --json 2>/dev/null)
+OCR_TEXT=$(echo "$RESULT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('ocr_text',''))" 2>/dev/null)
+if echo "$OCR_TEXT" | grep -q "MIDGET_ALIVE"; then
+    pass "MIDGET_ALIVE confirmed in terminal via OCR"
+else
+    # OCR can be noisy - check for partial match
+    if echo "$OCR_TEXT" | grep -qiE "MIDGET.ALIVE|ALIVE"; then
+        pass "MIDGET_ALIVE partial match in OCR (font variance)"
+    else
+        fail "MIDGET_ALIVE not found in terminal OCR output"
+    fi
+fi
 
 # 9. steer clipboard roundtrip
 echo "[9/10] steer clipboard roundtrip"
