@@ -7,7 +7,7 @@
 
 ## Who You Are
 
-Read your agent file at `.opencode/agents/<your-name>.md`. If you are Weaver, you govern integration. If you are a deckhand, you have one tack — do it and report back.
+Read your agent file at `.opencode/agents/<your-name>.md`. If you are Weaver, you govern integration. If you are a deckhand, you have one tack - do it and report back.
 
 ## The Chain
 
@@ -73,10 +73,10 @@ Read the YAML HUD at the top of Weaver's last message. Key fields:
 |----|------|
 | SD-073 | Lying With Truth = Category One hazard |
 | SD-095 | Main Thread protection (PERMANENT) |
-| SD-134 | Truth first — sharpens True North |
+| SD-134 | Truth first - sharpens True North |
 | SD-152 | Full-sail commit discipline |
 | SD-162 | The Map Is Not The Territory |
-| SD-163 | On Point — patterns proving across layers |
+| SD-163 | On Point - patterns proving across layers |
 
 ## The Lexicon (fast path)
 

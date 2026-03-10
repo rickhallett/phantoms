@@ -1,4 +1,4 @@
-# Research Dispatch Pipeline — Transcript Analysis
+# Research Dispatch Pipeline - Transcript Analysis
 
 > Repeatable pipeline for bulk research dispatch across transcript sources.
 > Each transcript is processed by parallel subagents (architect + analyst).
@@ -9,45 +9,42 @@
 
 ## Pipeline Sequence
 
-```signal
-PIPELINE := foreach(transcript IN docs/research/transcripts/) -> dispatch(parallel)
+**Pipeline:** For each transcript in `docs/research/transcripts/`, dispatch parallel subagents.
 
--- Per transcript, ordered steps:
-P1_CLUSTER :=
-  input    := transcript(raw)
-  task     := thematic_reduction(clustered, high_verbosity, preserve_subtlety)
-  output   := thematic_clusters.md
-  rule     := BEFORE(websearch) | reduce_from_source_only
-  agent    := {architect, analyst} | parallel | below_decks
+**Per transcript, ordered steps:**
 
-P2_RESEARCH :=
-  input    := P1_CLUSTER.output
-  task     := websearch(wide, deep) -> report(convergence, divergence, citations)
-  output   := research_report.md + exec_summary_header
-  rule     := high_verbosity | cite_sources | flag(convergence | divergence)
-  agent    := {architect, analyst} | parallel | below_decks
+**P1 - CLUSTER**
+- **Input:** Raw transcript
+- **Task:** Thematic reduction (clustered, high verbosity, preserve subtlety)
+- **Output:** `thematic_clusters.md`
+- **Rule:** Before websearch; reduce from source only
+- **Agent:** architect + analyst, parallel, below decks
 
-P3_COMPARE :=
-  input    := {P1_CLUSTER.output, P2_RESEARCH.output, current_principles}
-  current_principles := {AGENTS.md, layer-model.md, lexicon.md, slopodar.yaml}
-  task     := stain(findings, current_principles) -> delta_report
-  output   := comparison_report.md + exec_summary
-  rule     := highlight(similar, missing, convergence, divergence)
-  agent    := {architect, analyst} | parallel | below_decks
+**P2 - RESEARCH**
+- **Input:** P1 output
+- **Task:** Websearch (wide, deep), then report on convergence, divergence, citations
+- **Output:** `research_report.md` + exec summary header
+- **Rule:** High verbosity, cite sources, flag convergence and divergence
+- **Agent:** architect + analyst, parallel, below decks
 
-P4_SUMMARY :=
-  input    := {P1, P2, P3}.outputs
-  task     := post_process(conclusions)
-  output   := post_process_summary.md
-  agent    := {architect, analyst} | parallel | below_decks
+**P3 - COMPARE**
+- **Input:** P1 output, P2 output, current principles (AGENTS.md, layer-model.md, lexicon.md, slopodar.yaml)
+- **Task:** Stain findings against current principles, produce delta report
+- **Output:** `comparison_report.md` + exec summary
+- **Rule:** Highlight similar, missing, convergence, divergence
+- **Agent:** architect + analyst, parallel, below decks
 
--- Weaver aggregation pass:
-WEAVER_PASS :=
-  input    := foreach(transcript) -> {P4_SUMMARY, P2.exec_summary, P3.exec_summary}
-  task     := read(exec_summaries) -> check(compression_loss, against=full_reports)
-  output   := distillation.md -> operator
-  rule     := flag(compression_loss) | weave(cross_transcript_themes) | muster(operator)
-```
+**P4 - SUMMARY**
+- **Input:** P1, P2, P3 outputs
+- **Task:** Post-process conclusions
+- **Output:** `post_process_summary.md`
+- **Agent:** architect + analyst, parallel, below decks
+
+**WEAVER PASS (aggregation)**
+- **Input:** For each transcript: P4 summary, P2 exec summary, P3 exec summary
+- **Task:** Read exec summaries, check for compression loss against full reports
+- **Output:** `distillation.md` for Operator
+- **Rule:** Flag compression loss, weave cross-transcript themes, muster for Operator
 
 ## Transcripts (current inventory)
 
@@ -60,10 +57,10 @@ WEAVER_PASS :=
 
 ## Current Principles (comparison targets)
 
-- `AGENTS.md` — standing orders, gate, HUD, layer model (compressed), slopodar (compressed), foot guns
-- `docs/internal/layer-model.md` — L0-L12 agentic system model v0.3
-- `docs/internal/lexicon.md` — operational vocabulary v0.21
-- `docs/internal/slopodar.yaml` — anti-pattern taxonomy (18 entries)
+- `AGENTS.md` - standing orders, gate, HUD, layer model (compressed), slopodar (compressed), foot guns
+- `docs/internal/layer-model.md` - L0-L12 agentic system model v0.3
+- `docs/internal/lexicon.md` - operational vocabulary v0.21
+- `docs/internal/slopodar.yaml` - anti-pattern taxonomy (18 entries)
 
 ## Output Directory
 

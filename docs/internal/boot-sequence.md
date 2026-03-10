@@ -1,4 +1,4 @@
-# Boot Sequence — noopit (thepit-v2)
+# Boot Sequence - noopit (thepit-v2)
 
 > What every agent must load on cold wake. If you don't have this context, you're in the dumb zone.
 > Back-ref: SD-311 (prime context), SD-299 (governance refined), SD-275 (token elephant).
@@ -9,32 +9,28 @@ The harness auto-loads three files before your first prompt: `~/.claude/CLAUDE.m
 
 ## The Sequence
 
-Read in order. Do not skip steps. Do not read depth 2+ on boot — lazy load when needed.
+Read in order. Do not skip steps. Do not read depth 2+ on boot - lazy load when needed.
 
-```signal
-BOOT := sequence(ordered, mandatory, no_skip)
+Boot is ordered, mandatory, no skipping.
 
--- Step 0: HARNESS AUTO-LOAD (you don't control this)
--- These are injected before your first prompt by the harness itself.
-S0.global    := ~/.claude/CLAUDE.md                           -- engineering principles
-S0.ship      := AGENTS.md                                     -- standing orders, gate, HUD spec
-S0.identity  := .claude/agents/{self}.md                      -- who you are
+**Step 0: HARNESS AUTO-LOAD** (you don't control this - injected before your first prompt)
+- **S0.global** - `~/.claude/CLAUDE.md` - engineering principles
+- **S0.ship** - `AGENTS.md` - standing orders, gate, HUD spec
+- **S0.identity** - `.claude/agents/{self}.md` - who you are
 
--- Step 1: ORIENTATION (read immediately on wake)
-S1.sd_index  := read(docs/internal/session-decisions-index.yaml)  -- last 10 SDs, standing orders
-S1.lexicon   := read(docs/internal/lexicon.md)                    -- vocabulary [SO-PERM-002]
-S1.slopodar  := read(docs/internal/slopodar.yaml)                -- anti-pattern taxonomy [SD-286]
+**Step 1: ORIENTATION** (read immediately on wake)
+- **S1.sd_index** - read `docs/internal/session-decisions-index.yaml` - last 10 SDs, standing orders
+- **S1.lexicon** - read `docs/internal/lexicon.md` - vocabulary [SO-PERM-002]
+- **S1.slopodar** - read `docs/internal/slopodar.yaml` - anti-pattern taxonomy [SD-286]
 
--- Step 2: OPERATIONAL AWARENESS (read immediately after S1)
-S2.signal    := read(docs/weaver/signal-protocol-poc.md)          -- Signal notation, syntax primitives
-S2.layer     := read(docs/internal/layer-model.md)                -- L0-L12 agentic system model
-S2.decisions := scan(docs/decisions/SD-*.md)                      -- session-scoped decision files
+**Step 2: OPERATIONAL AWARENESS** (read immediately after S1)
+- **S2.layer** - read `docs/internal/layer-model.md` - L0-L12 agentic system model
+- **S2.decisions** - scan `docs/decisions/SD-*.md` - session-scoped decision files
 
--- Step 3: SITUATIONAL (read on need — BFS depth 1 only)
-S3.git       := run(git status && git log --oneline -10)
-S3.recovery  := read(docs/internal/dead-reckoning.md)         WHEN context_died | blowout
-S3.full_sd   := read(docs/internal/session-decisions.md)       WHEN tracing(specific_SD)
-```
+**Step 3: SITUATIONAL** (read on need - BFS depth 1 only)
+- **S3.git** - run `git status && git log --oneline -10`
+- **S3.recovery** - read `docs/internal/dead-reckoning.md` - only when context died or blowout
+- **S3.full_sd** - read `docs/internal/session-decisions.md` - only when tracing a specific SD
 
 ---
 
@@ -42,15 +38,15 @@ S3.full_sd   := read(docs/internal/session-decisions.md)       WHEN tracing(spec
 
 **S0 (auto):** You know who you are, what the rules are, what the gate is. You do NOT know where you are, what's been decided recently, or what words mean in this system.
 
-**S1 (orientation):** You know the last 10 decisions (bearing). You know the vocabulary (lexicon — every term, every HUD field, every register). You know the anti-patterns to watch for (slopodar). After S1, you can communicate in-vocabulary and understand Operator's signals.
+**S1 (orientation):** You know the last 10 decisions (bearing). You know the vocabulary (lexicon - every term, every HUD field, every register). You know the anti-patterns to watch for (slopodar). After S1, you can communicate in-vocabulary and understand Operator's signals.
 
-**S2 (operational):** You know Signal notation (the compressed governance protocol — so `vgrep(x)` parses as "visual grep" not "run grep"). You know the layer model (L0-L12 — the map of how this system works). You know any session-scoped decisions that live as standalone files.
+**S2 (operational):** You know Signal notation (the compressed governance protocol - so `vgrep(x)` parses as "visual grep" not "run grep"). You know the layer model (L0-L12 - the map of how this system works). You know any session-scoped decisions that live as standalone files.
 
 **S3 (situational):** You know git state, open PRs, recent commits. Only read if the task requires it. The dead-reckoning file is for blowout recovery only.
 
 ---
 
-## File Map (BFS — depth 1 is boot, depth 2+ is reference)
+## File Map (BFS - depth 1 is boot, depth 2+ is reference)
 
 ```
 docs/internal/                          -- DEPTH 1 (boot surface)
@@ -78,21 +74,18 @@ docs/decisions/                         -- DEPTH 2 (session-scoped SDs)
 
 ## Standing Orders That Apply to Boot
 
-```signal
-SO-PERM-002  := all_hands.boot -> read(lexicon.md)              [SD-126]
-               -- "If the Lexicon is not in your context window, you are not on this ship."
-SO.slopodar  := all_hands.boot -> read(slopodar.yaml)           [SD-286]
-SO.chain     := historical_data := immutable                     [SD-266 PERM]
-SO.printf    := pipe(value, cli) -> printf !echo                 [CLAUDE.md]
-```
+- **SO-PERM-002** - All hands on boot: read `lexicon.md` [SD-126]. "If the Lexicon is not in your context window, you are not on this ship."
+- **SO.slopodar** - All hands on boot: read `slopodar.yaml` [SD-286]
+- **SO.chain** - Historical data is immutable [SD-266 PERM]
+- **SO.printf** - Pipe values to CLI with printf, never echo [CLAUDE.md]
 
 ---
 
 ## What This File Is NOT
 
-- NOT a replacement for AGENTS.md (that's the standing orders — auto-loaded)
-- NOT a replacement for the lexicon (that's the vocabulary — loaded at S1)
-- NOT the dead reckoning protocol (that's for blowout recovery — loaded at S3 if needed)
+- NOT a replacement for AGENTS.md (that's the standing orders - auto-loaded)
+- NOT a replacement for the lexicon (that's the vocabulary - loaded at S1)
+- NOT the dead reckoning protocol (that's for blowout recovery - loaded at S3 if needed)
 - This IS the manifest that tells you what to read and when, so you don't wake up in the dumb zone
 
 ---
@@ -100,6 +93,6 @@ SO.printf    := pipe(value, cli) -> printf !echo                 [CLAUDE.md]
 ## Provenance
 
 Created: 2026-03-03, SD-TBD (boot sequence definition for noopit).
-Triggered by: Operator observed Weaver cold-waking without lexicon, signal spec, or SD orientation — responded to `vgrep(bootsequence)` without recognising Signal notation.
+Triggered by: Operator observed Weaver cold-waking without lexicon, signal spec, or SD orientation - responded to `vgrep(bootsequence)` without recognising Signal notation.
 Root cause: Agent files referenced `docs/internal/` paths from tspit that didn't exist in noopit.
 Fix: Essential files rescued from tspit-ARCHIVED. Boot sequence defined as manifest. AGENTS.md updated to point here.

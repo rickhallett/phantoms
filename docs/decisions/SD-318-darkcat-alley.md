@@ -1,4 +1,4 @@
-# SD-318: Darkcat Alley — Standardised Cross-Model Triangulation
+# SD-318: Darkcat Alley - Standardised Cross-Model Triangulation
 
 **Date:** 2026-03-09
 **Status:** STANDING (this run)
@@ -7,7 +7,7 @@
 
 ## Context
 
-Cross-model code review (SD-317 Data Product 1) produced 31 unique findings from 3 model families with zero false positives. 74% of findings were caught by only one model. The process worked but was ad hoc — each model produced freeform reports in different formats, and synthesis was manual.
+Cross-model code review (SD-317 Data Product 1) produced 31 unique findings from 3 model families with zero false positives. 74% of findings were caught by only one model. The process worked but was ad hoc - each model produced freeform reports in different formats, and synthesis was manual.
 
 Operator's direction: standardise the process, name it, lexify it, make it repeatable, make it produce machine-readable data for numerical evidence and visualisations. The visualisations feed the portfolio (SD-309). This is mission-critical work.
 
@@ -15,7 +15,7 @@ Operator's direction: standardise the process, name it, lexify it, make it repea
 
 ### Naming
 
-**Darkcat Alley** — the standardised 3-model cross-triangulation of a full codebase. Run pre-QA and post-QA; the delta between runs is a data product. Lexified in Lexicon v0.25.
+**Darkcat Alley** - the standardised 3-model cross-triangulation of a full codebase. Run pre-QA and post-QA; the delta between runs is a data product. Lexified in Lexicon v0.25.
 
 ### Standardisation
 
@@ -52,7 +52,7 @@ Existing R1/R2/R3 artifacts from the first alley run remain as historical artifa
 
 - **Repeatability**: The process can now be run on any codebase by any operator with the instructions + parser + 3 models
 - **Numerical evidence**: Machine-readable output enables the diminishing returns analysis that answers "is cross-model review worth the cost?"
-- **Portfolio**: The visualisations are direct evidence for the Anthropic red teaming case — this is how you build a verification fabric for probabilistic systems
+- **Portfolio**: The visualisations are direct evidence for the Anthropic red teaming case - this is how you build a verification fabric for probabilistic systems
 - **Compound quality**: Each run adds a data point; over time the curves tell the story
 
 ## Artifacts

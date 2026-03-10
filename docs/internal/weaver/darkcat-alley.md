@@ -1,4 +1,4 @@
-# Darkcat Alley — Process Definition & Numerical Pipeline
+# Darkcat Alley - Process Definition & Numerical Pipeline
 
 **Version:** 1.0
 **Status:** STANDING (this run)
@@ -10,18 +10,12 @@
 
 ## What It Is
 
-Darkcat Alley is the standardised 3-model cross-triangulation of a full codebase. Three independent darkcats (different model families) review the same code snapshot using structured instructions. The process runs **twice per QA cycle** — pre-QA and post-QA — and the delta between runs is itself a data product.
+Darkcat Alley is the standardised 3-model cross-triangulation of a full codebase. Three independent darkcats (different model families) review the same code snapshot using structured instructions. The process runs **twice per QA cycle** - pre-QA and post-QA - and the delta between runs is itself a data product.
 
-```signal
-DEF darkcat_alley :=
-  3_models.independent.review(same_snapshot)
-  -> structured_findings(YAML) + narrative(markdown)
-  -> triangulate(convergence, divergence, blind_spots)
-  -> numerical_pipeline(metrics -> visualisations -> portfolio)
+**Darkcat Alley** is: 3 independent models review the same snapshot, producing structured findings (YAML) and narrative (markdown), then triangulated for convergence, divergence, and blind spots, feeding a numerical pipeline (metrics to visualisations to portfolio).
 
-RUN := pre_QA(polecat_code) & post_QA(fixed_code)
-DELTA := post_QA.findings - pre_QA.findings = residual_risk + fix_effectiveness
-```
+- **Runs:** pre-QA (polecat code) and post-QA (fixed code)
+- **Delta:** post-QA findings minus pre-QA findings = residual risk + fix effectiveness
 
 ---
 
@@ -30,7 +24,7 @@ DELTA := post_QA.findings - pre_QA.findings = residual_risk + fix_effectiveness
 ### Phase 1: Snapshot
 
 1. Identify branches/commits to review
-2. Freeze the snapshot — no changes until all reviews complete
+2. Freeze the snapshot - no changes until all reviews complete
 3. Generate diffs: `git diff main..<branch>` for each branch
 4. Record snapshot state in the run metadata
 
@@ -47,7 +41,7 @@ Dispatch 3 independent reviews using different model families. Each reviewer get
 | R2 | Gemini | External tool or API |
 | R3 | OpenAI (Codex/GPT) | External tool or API |
 
-**Rule:** Reviewer ≠ author. No model reviews its own output (if Claude polecats wrote the code, Claude darkcat is still valid — different context window, adversarial prompt, read-only).
+**Rule:** Reviewer != author. No model reviews its own output (if Claude polecats wrote the code, Claude darkcat is still valid - different context window, adversarial prompt, read-only).
 
 ### Phase 3: Collect
 
@@ -69,16 +63,16 @@ uv run bin/triangulate --run pre-qa-2026-03-09 \
 ```
 
 The parser produces:
-1. `data/alley/<run-id>/convergence.yaml` — the convergence matrix
-2. `data/alley/<run-id>/metrics.yaml` — numerical summary
-3. `data/alley/<run-id>/findings-union.yaml` — deduplicated union of all findings
+1. `data/alley/<run-id>/convergence.yaml` - the convergence matrix
+2. `data/alley/<run-id>/metrics.yaml` - numerical summary
+3. `data/alley/<run-id>/findings-union.yaml` - deduplicated union of all findings
 4. stdout summary for human review
 
 ### Phase 5: Analyse
 
 Human reviews the triangulation output. Key questions:
-- What converged? (High confidence — fix these)
-- What diverged? (Interesting signal — investigate)
+- What converged? (High confidence - fix these)
+- What diverged? (Interesting signal - investigate)
 - What did each model uniquely find? (Blind spot map)
 - What is the marginal value of each additional review?
 
@@ -104,7 +98,7 @@ schema:
   unique: int         # found only by this model
   shared_2: int       # found by this model + 1 other
   shared_3: int       # found by all 3
-visualisation: "Grouped bar chart — total/unique/shared per model"
+visualisation: "Grouped bar chart - total/unique/shared per model"
 insight: "Which model finds the most? Which finds the most unique?"
 ```
 
@@ -121,7 +115,7 @@ schema:
   rate_3: float       # converged_3 / total
   rate_2plus: float   # (converged_3 + converged_2) / total
   rate_single: float  # single_model / total
-visualisation: "Stacked bar or pie — convergence distribution"
+visualisation: "Stacked bar or pie - convergence distribution"
 insight: "How much does each model miss? Is single-model review sufficient?"
 ```
 
@@ -142,7 +136,7 @@ schema:
     - model: R3
       cumulative_unique: int
       new_unique: int      # findings R3 adds that R1+R2 didn't have
-visualisation: "Line chart — cumulative unique findings vs review count. The slope is the marginal value. When slope ≈ 0, you've hit diminishing returns."
+visualisation: "Line chart - cumulative unique findings vs review count. The slope is the marginal value. When slope ~= 0, you've hit diminishing returns."
 insight: "At what point does an additional model review stop adding value? Is 3 enough? Would 4 add anything?"
 ```
 
@@ -157,7 +151,7 @@ schema:
   high: int
   medium: int
   low: int
-visualisation: "Heatmap — models × severity levels, cell = count"
+visualisation: "Heatmap - models x severity levels, cell = count"
 insight: "Do different models calibrate severity differently? Is there a systematic optimist/pessimist?"
 ```
 
@@ -176,8 +170,8 @@ schema:
     WD-TDF: int        # Training Data Frequency
     WD-PG: int         # Paper Guardrail
     WD-PL: int         # Phantom Ledger
-visualisation: "Radar chart per model — category coverage. Overlay all 3 to show complementarity."
-insight: "Do models have characteristic blind spots by category? (Preliminary: yes — Semantic Hallucination is Claude-only.)"
+visualisation: "Radar chart per model - category coverage. Overlay all 3 to show complementarity."
+insight: "Do models have characteristic blind spots by category? (Preliminary: yes - Semantic Hallucination is Claude-only.)"
 ```
 
 ### Metric 6: Severity Calibration (Inter-Rater Agreement)
@@ -192,7 +186,7 @@ schema:
   r3_severity: string
   agreement: bool     # all match?
   max_delta: int      # ordinal distance between highest and lowest (critical=4, high=3, medium=2, low=1)
-visualisation: "Scatter or table — finding × model severity. Highlights disagreements."
+visualisation: "Scatter or table - finding x model severity. Highlights disagreements."
 insight: "When models converge on existence, do they converge on severity? (Preliminary: yes for critical, diverges for low.)"
 ```
 
@@ -208,7 +202,7 @@ schema:
   survived: int       # in both
   new: int            # in post, not in pre (regressions or new areas reviewed)
   fix_rate: float     # fixed / pre_qa_total
-visualisation: "Sankey diagram — pre-QA findings flowing to fixed/survived/new"
+visualisation: "Sankey diagram - pre-QA findings flowing to fixed/survived/new"
 insight: "How effective is the fix batch? What class of finding survives? Are fixes introducing new issues?"
 ```
 
@@ -224,8 +218,8 @@ schema:
   confirmed_false: int
   disputed: int
   fp_rate: float      # confirmed_false / total_findings
-visualisation: "Bar chart — precision (1 - fp_rate) per model"
-insight: "Can you trust a model's findings? (Preliminary: yes — 0% FP across 3 models, 31 findings.)"
+visualisation: "Bar chart - precision (1 - fp_rate) per model"
+insight: "Can you trust a model's findings? (Preliminary: yes - 0% FP across 3 models, 31 findings.)"
 ```
 
 ---
@@ -247,13 +241,13 @@ insight: "Can you trust a model's findings? (Preliminary: yes — 0% FP across 3
 
 These are the charts we will produce for the portfolio. Each maps to a metric above.
 
-1. **The Alley Chart** — Grouped bar: findings per model (total, unique, shared). The hero visual.
-2. **Diminishing Returns Curve** — Line: cumulative unique findings vs review count. Slope = marginal value. Multiple runs overlay to show if the curve is stable.
-3. **Blind Spot Radar** — Radar chart: Watchdog categories per model, overlaid. Shows complementarity.
-4. **Severity Heatmap** — Models × severity, cell = count. Shows calibration differences.
-5. **The Sankey** — Pre-QA → Post-QA finding flow. Fixed / survived / new.
-6. **Convergence Donut** — 3-way / 2-way / single-model distribution. "74% single-model-only" is the headline.
-7. **Precision Bars** — FP rate per model. "Zero false positives across 31 findings" is the headline.
+1. **The Alley Chart** - Grouped bar: findings per model (total, unique, shared). The hero visual.
+2. **Diminishing Returns Curve** - Line: cumulative unique findings vs review count. Slope = marginal value. Multiple runs overlay to show if the curve is stable.
+3. **Blind Spot Radar** - Radar chart: Watchdog categories per model, overlaid. Shows complementarity.
+4. **Severity Heatmap** - Models x severity, cell = count. Shows calibration differences.
+5. **The Sankey** - Pre-QA to Post-QA finding flow. Fixed / survived / new.
+6. **Convergence Donut** - 3-way / 2-way / single-model distribution. "74% single-model-only" is the headline.
+7. **Precision Bars** - FP rate per model. "Zero false positives across 31 findings" is the headline.
 
 ---
 

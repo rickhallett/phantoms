@@ -6,16 +6,15 @@
 
 ## Definition of DONE
 
-```signal
-DEF DONE := gate.green
-           & darkcat{claude, openai, gemini}.complete
-           & darkcat_synth.convergence_report
-           & pitkeel.signals_reviewed
-           & walkthrough.checked
-           & events.marked
+**DONE** requires all of:
+- Gate green (typecheck + lint + test)
+- Darkcat triad complete (Claude, OpenAI, Gemini)
+- Darkcat synthesis convergence report produced
+- Pitkeel signals reviewed
+- Walkthrough checked
+- Events marked
 
-RULE := !commit UNTIL DONE
-```
+**Rule:** No commit until DONE.
 
 ---
 
@@ -92,7 +91,7 @@ RULE := !commit UNTIL DONE
 
 ---
 
-## Data Capture — What, Where, When
+## Data Capture - What, Where, When
 
 ### Step 1: DEV
 
@@ -211,7 +210,7 @@ cd pitkeel && uv run python pitkeel.py state-update --officer <name>  # update s
 
 ---
 
-## File Map — Where Everything Lives
+## File Map - Where Everything Lives
 
 ```
 .logs/

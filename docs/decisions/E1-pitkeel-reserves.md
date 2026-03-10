@@ -1,4 +1,4 @@
-# E1 — Pitkeel Reserves & Sleep Daemon
+# E1 - Pitkeel Reserves & Sleep Daemon
 
 > **Epic:** E1 (Pitkeel Human Protection Upgrade)
 > **Status:** Implemented
@@ -8,12 +8,10 @@
 
 ## Rationale
 
-```signal
-L12.degrades -> all_layers.degrade
-phases{1,2}.productive & unsustainable.human_cost
-CONNECTS := {cognitive_deskilling, hot_context_pressure}       [SD-312]
-MECHANISM := operator.!notices(flow_state) -> threshold.invisible
-```
+- When L12 (human) degrades, all layers degrade
+- Phases 1 and 2 were productive but carried unsustainable human cost
+- **Connects to:** cognitive deskilling, hot context pressure [SD-312]
+- **Mechanism:** Operator doesn't notice flow state, so thresholds become invisible
 
 Phase 1 and Phase 2 were extraordinarily productive but carried an unsustainable human cost. The human is the irreducible layer in the system. If L12 degrades, everything downstream degrades. This epic operationalises that lesson.
 
@@ -21,7 +19,7 @@ Phase 1 and Phase 2 were extraordinarily productive but carried an unsustainable
 
 ### 1. Reserves Tracking (`docs/operator/reserves.tsv`)
 
-Append-only TSV in the operator's personal area (committed — personal area is already marked).
+Append-only TSV in the operator's personal area (committed - personal area is already marked).
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -43,7 +41,7 @@ make -f pitkeel.mk exercised
 
 ### 2. Reserves HUD Section
 
-New terminal section in `cmd_all()` and new `pitkeel reserves` subcommand. **Display only — not in hook output, not on commits.**
+New terminal section in `cmd_all()` and new `pitkeel reserves` subcommand. **Display only - not in hook output, not on commits.**
 
 Renders time-since-last for each reserve type with progressive urgency:
 
@@ -53,7 +51,7 @@ Renders time-since-last for each reserve type with progressive urgency:
 | 18h–23h (remaining 6h) | Yellow | Warning |
 | 23h–23h50m (remaining 1h) | Red | Urgent |
 | 23h50m–24h (remaining 10m) | Red, flashing | Final warning: "SAVE YOUR WORK" |
-| ≥ 24h | — | Shutdown initiated |
+| >=24h | - | Shutdown initiated |
 
 ### 3. Session Noise (Progressive)
 
@@ -69,13 +67,11 @@ This supplements existing fatigue detection in `analysis.py` (which starts at "m
 
 ### 4. Sleep Daemon
 
-Background process that checks reserves state periodically. **This is the enforcement mechanism.** Without it, the reserves check only fires when pitkeel is actively invoked — which is precisely when the Operator is least likely to need it (he's already at the terminal, already in the system). The daemon catches the case where no agents are running and no work is happening, but the 24h clock is still ticking.
+Background process that checks reserves state periodically. **This is the enforcement mechanism.** Without it, the reserves check only fires when pitkeel is actively invoked - which is precisely when the Operator is least likely to need it (he's already at the terminal, already in the system). The daemon catches the case where no agents are running and no work is happening, but the 24h clock is still ticking.
 
-```signal
-DEF sleep_daemon := background_process | checks(reserves) | interval(15min)
-RULE := daemon.runs_independently(agent_sessions)
-RULE := shutdown.literal(OS) | visceral.by_design
-```
+- **Sleep daemon** - Background process that checks reserves every 15 minutes
+- Daemon runs independently of agent sessions
+- Shutdown is literal (OS level) - visceral by design
 
 **Daemon specification:**
 
@@ -101,7 +97,7 @@ The 60-second grace period protects in-flight git operations. It is not enough t
 Gitignored Makefile for convenience. Not committed to remote.
 
 ```makefile
-# pitkeel.mk — local convenience targets for reserves tracking
+# pitkeel.mk - local convenience targets for reserves tracking
 # This file is .gitignored. Not part of the remote repository.
 
 PITKEEL := uv run pitkeel/pitkeel.py
@@ -148,10 +144,9 @@ All changes are within `pitkeel/` (Python, uv [SD-310]) and `docs/operator/`.
 
 ## Verification
 
-```signal
-GATE := pitkeel_tests.pass & reserves.renders & daemon.starts_stops & shutdown.fires(test_mode)
-RULE := daemon.has(--dry-run) | !test_with_real_shutdown
-```
+**Gate requires:** pitkeel tests pass, reserves renders correctly, daemon starts/stops cleanly, shutdown fires in test mode.
+
+**Rule:** Daemon must have `--dry-run` flag - never test with real shutdown.
 
 - `analyse_reserves()` unit tests cover all threshold boundaries
 - Daemon has `--dry-run` flag that logs "would shutdown" instead of executing

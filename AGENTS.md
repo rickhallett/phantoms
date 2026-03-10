@@ -1,47 +1,26 @@
-# Ship's Orders - noopit (thepit-v2 Calibration Run)
+# Ship's Orders - midgets (Phase 3)
 
 > Governance is inescapable. This is not reduced governance - it is refined governance.
 > This file IS the boot sequence. Everything an agent needs to operate is here or referenced with a file path.
-> If you only read one file, this is it. If you can't parse Signal notation, read the prose comments.
+> If you only read one file, this is it.
 
-## Signal Syntax (read this first - it's used throughout)
+## Shorthand Conventions
 
-Signal is a notation convention for expressing governance concisely. NOT a DSL, NOT a language, NOT a prompt engineering technique - no parser, no build step. It compresses process discipline, not prompt wording. Operator names things in Signal; you must be able to read it.
+This file uses compact shorthand notation. Refs like [SD-309] point to session decisions
+in the chain (`docs/internal/session-decisions.md`). L0-L12 refer to layers in the
+operational model (see Layer Model section). Terms in **bold** are defined in the Lexicon
+section or in `docs/internal/lexicon.md`.
 
-```signal
--- Syntax primitives
-RULE      := constraint that must hold
-DEF       := what something IS
-WHEN      := guard condition
-=>        := produces / implies
-|         := alternative
-&         := conjunction
-!         := negation
-->        := maps to / flows to
->>        := overrides
-?         := Operator's call needed
-[ref]     := back-reference (SD number, file, concept)
-{...}     := set
-(...)     := grouping / parameters
-@agent    := agent identity
-#tag      := classification
-
--- Common patterns
-vgrep(x)       := visual grep - search for x, show what you find with context
-muster(items)  := present as numbered table for O(1) binary decisions per row
-stain(x, taxonomy) := apply diagnostic taxonomy to x, reveal hidden structure
-```
-
-Full PoC: `docs/weaver/signal-protocol-poc.md` v0.1 [SD-313, SD-314]
+> Signal notation (`:=`, `->`, `|`, `&`, `!`) was used in earlier versions of this file.
+> It was killed in SD-321 after adversarial testing showed conventional shorthand achieves
+> equal decode accuracy with better compression. See `data/signal-test/` for evidence.
 
 ---
 
 ## True North
 
-```signal
-NORTH := hired = proof > claim                          [SD-309 LOCKED]
-RULE  := truth >> hiring                                [SD-134 PERM]
-```
+**PRIMARY OBJECTIVE:** get hired - proof over claims [SD-309, locked]
+**OVERRIDE:** truth over hiring signal [SD-134, permanent]
 
 Every decision, every artifact, every engagement is minmaxed against this objective. Target: Anthropic red teaming role, HN post. "One shot on HN." [SD-309]
 
@@ -49,26 +28,26 @@ Every decision, every artifact, every engagement is minmaxed against this object
 
 ## Standing Orders
 
-```signal
-SO.decisions   := decision -> durable_file | !context_only     [SD-266 PERM, the_chain]
-SO.chain       := historical_data := immutable                  [SD-266 PERM]
-SO.estimation  := estimate(task) -> agent_minutes !human_speed  [SD-268 PERM]
-SO.truth       := truth >> hiring_signal                        [SD-134 PERM]
-SO.gate        := change.ready WHEN gate.green                  [hull]
-SO.printf      := pipe(value, cli) -> printf !echo              [CLAUDE.md]
-SO.session_end := !unpushed_commits
-SO.yaml_hud    := address(operator) -> yaml_header_first
-SO.uv          := python -> uv_exclusively !exceptions          [SD-310]
-SO.echo        := order -> echo(Signal) BEFORE acting | !excepted [SD-315]
-SO.event_log    := notable_event -> append(events.yaml, {date, time, type, agent, commit, ref, summary, backrefs})
-SO.rerun       := bad_output -> diagnose & reset & rerun !fix_in_place  [dumb_zone]
-SO.atomic_task := 1_action == 1_instruction_set == 1_agent              [all_dev]
-SO.commendation := extra_rations -> append(commendations.log, {date, agent, recipient, reason}) [durable]
-SO.backlog     := task.identified -> backlog add "title" --priority P [--epic E] [--tag T]
-SO.roi         := before(dispatch | review_round) -> ROI(cost, time, marginal_value) vs proceed  [fleet_v2.1]
-SO.no_em_dash  := !em_dash | use(single_dash | no_dash)                [SD-319 PERM]
-SO.no_emoji    := !emoji | any_context | no_exceptions                 [SD-319 PERM]
-```
+These persist across all sessions. Obey without restatement.
+
+- **decisions:** write to durable file, not context only [SD-266, permanent]
+- **chain:** historical data is immutable [SD-266, permanent]
+- **estimation:** estimates in agent-minutes, not human speed [SD-268, permanent]
+- **truth:** truth over hiring signal [SD-134, permanent]
+- **gate:** change is ready only when the gate is green
+- **printf:** pipe values to CLI with printf, never echo [CLAUDE.md]
+- **session end:** no unpushed commits
+- **yaml hud:** every address to Operator opens with YAML status header
+- **uv:** Python uses uv exclusively, no exceptions [SD-310]
+- **echo:** readback understanding before acting [SD-315]
+- **event log:** notable events append to events.yaml with date, time, type, agent, commit, ref, summary, backrefs
+- **rerun:** bad output means diagnose, reset, rerun - not fix in place
+- **atomic task:** one action = one instruction set = one agent
+- **commendation:** append to commendations.log with date, agent, recipient, reason
+- **backlog:** new tasks go through `backlog add "title" --priority P [--epic E] [--tag T]`
+- **roi:** before dispatching or review rounds, weigh cost/time/marginal value vs proceeding
+- **no em-dashes:** use single dash or no dash, ever [SD-319, permanent]
+- **no emojis:** none, any context, no exceptions [SD-319, permanent]
 
 ### Backlog CLI
 
@@ -100,34 +79,30 @@ If the gate fails, the change is not ready. The hull is survival; everything els
 
 ## The Engineering Loop
 
-```signal
-LOOP := read -> verify -> write -> execute -> confirm
-RULE := !infer(what_you_can_verify)
-RULE := commit.atomic + commit.conventional_message
-RULE := gate.green BEFORE done
-```
+**Read -> Verify -> Write -> Execute -> Confirm**
+
+- Do not infer what you can verify
+- Commits are atomic with conventional messages
+- Gate must be green before done
 
 ---
 
 ## The Bearing Check
 
-A repeatable governance unit. Run at phase boundaries - before starting a new phase of work, after returning from break, or whenever the Operator suspects drift.
+A repeatable governance unit. Calibrate instruments before changing heading.
 
-```signal
-DEF bearing_check := calibrate(instruments) BEFORE new_heading
-WHEN := phase_boundary | session_start_after_break | operator.suspects(drift)
+**When:** phase boundary, session start after break, or when the Operator suspects drift.
 
-CHECK spec_drift    := vgrep(SPEC.md) against implementation | note(divergence)
-CHECK eval_validity := read(EVAL.md) | criteria.still_reachable? | amendments.needed?
-CHECK plan_accuracy := read(PLAN.md) | completed_table.current? | deps.still_valid?
-CHECK gate_health   := run(gate) | all_tests.pass? | no_regressions?
-CHECK backlog_sync  := read(backlog.yaml) | items.still_relevant? | priorities.correct?
+**Checks:**
+- **spec drift:** search SPEC.md against implementation, note divergence
+- **eval validity:** read EVAL.md - criteria still reachable? amendments needed?
+- **plan accuracy:** read PLAN.md - completed table current? dependencies still valid?
+- **gate health:** run the gate - all tests pass? no regressions?
+- **backlog sync:** read backlog.yaml - items still relevant? priorities correct?
 
-OUTPUT := findings(per_check) -> note_if_drift | fix_if_small | backlog_if_large
-RULE   := bearing_check.cost ≈ 15_agent_min | drift_cost >> check_cost
-```
+**Output:** findings per check - note drift, fix if small, backlog if large.
 
-This was codified from the 2026-03-08 pre-bouts drift review. The cost of checking is negligible; the cost of building on stale instruments is not.
+Cost is roughly 15 agent-minutes. Drift cost is always higher than check cost. Codified from the 2026-03-08 pre-bouts drift review.
 
 ---
 
@@ -135,41 +110,18 @@ This was codified from the 2026-03-08 pre-bouts drift review. The cost of checki
 
 How work flows through the system at the Operator's level. Each phase boundary triggers a bearing check.
 
-```signal
-WORKFLOW :=
-  ┌─────────────────────────────────────────────────────────────┐
-  │ 1. BEARING CHECK                                            │
-  │    spec.inline? plan.current? eval.valid? gate.green?       │
-  │    fix(drift) | note(findings)                              │
-  ├─────────────────────────────────────────────────────────────┤
-  │ 2. SCOPE                                                    │
-  │    identify(next_phase) from PLAN.md                        │
-  │    decompose into PRs (1_PR == 1_concern)                   │
-  │    write(spec_plan) -> docs/decisions/                      │
-  ├─────────────────────────────────────────────────────────────┤
-  │ 3. DISPATCH                                                 │
-  │    prime_context(plan_file + deps) -> @Agent                │
-  │    agent.implements -> gate.verifies                        │
-  │    RULE: polecat(fresh_context) | !interactive_steering     │
-  ├─────────────────────────────────────────────────────────────┤
-  │ 4. REVIEW                                                   │
-  │    @Weaver.reviews(PR) | reviewer != author                 │
-  │    darkcat(adversarial) | findings.resolved BEFORE merge    │
-  ├─────────────────────────────────────────────────────────────┤
-  │ 5. MERGE + POST-VERIFY                                      │
-  │    gate.on(merge_target) | fail -> investigate.immediately  │
-  │    stain(diff, watchdog_taxonomy)                           │
-  │    update(PLAN.md completed table)                          │
-  ├─────────────────────────────────────────────────────────────┤
-  │ 6. ADVANCE or LOOP                                          │
-  │    phase.complete? -> bearing_check -> next_phase           │
-  │    phase.incomplete? -> next_PR(same_phase)                 │
-  └─────────────────────────────────────────────────────────────┘
+1. **BEARING CHECK** - spec inline? plan current? eval valid? gate green? Fix drift or note findings.
+2. **SCOPE** - identify next phase from PLAN.md, decompose into PRs (1 PR = 1 concern), write spec/plan to docs/decisions/.
+3. **DISPATCH** - prime context (plan file + deps) to agent. Agent implements, gate verifies. Use polecats (fresh context, no interactive steering).
+4. **REVIEW** - Weaver reviews PR (reviewer != author). Darkcat adversarial review. Findings resolved before merge.
+5. **MERGE + POST-VERIFY** - run gate on merge target; failure means investigate immediately. Stain diff against watchdog taxonomy. Update PLAN.md completed table.
+6. **ADVANCE or LOOP** - phase complete? bearing check then next phase. Phase incomplete? next PR in same phase.
 
-CADENCE := bearing_check -> scope -> {dispatch -> review -> merge}* -> advance
-RULE    := human.reviews(AFTER_execution) !during [polecat_principle]
-RULE    := spec_plan BEFORE implementation [provenance]
-```
+**Cadence:** bearing check -> scope -> (dispatch -> review -> merge)* -> advance
+
+**Rules:**
+- Human reviews after execution, not during (polecat principle)
+- Spec/plan before implementation (provenance)
 
 ---
 
@@ -177,36 +129,13 @@ RULE    := spec_plan BEFORE implementation [provenance]
 
 Identified in the pilot study. These are the controls this run tightens.
 
-```signal
-FOOTGUN spinning_to_infinity :=
-  mirror.unbounded -> meta(meta(...)) -> !decisions
-  BRAKE: register == quarterdeck ? "decision or analysis?"     [L9, L3]
-
-FOOTGUN high_on_own_supply :=
-  L12.creativity & L9.sycophancy -> positive_feedback_loop
-  BRAKE: bearing_check(NORTH)                                  [L9, L12]
-
-FOOTGUN dumb_zone :=
-  !prime_context | stale_context -> valid_syntax & !semantics
-  BRAKE: prime_context(plan_file | agents.md)                  [L3, L8]
-
-FOOTGUN cold_context_pressure :=
-  |on_file(depth < D2)| >> threshold -> pattern_match !solve
-  BRAKE: calibrate(prime_context.amount)                       [L3, L8]
-
-FOOTGUN hot_context_pressure :=
-  |in_thread| -> compaction_risk & signal_noise_degradation
-  BRAKE: offload(durable_file) & dispatch(subagent)            [L3, L9]
-
-FOOTGUN compaction_loss :=
-  context_window.death & !on_file(decision) -> permanent_loss
-  BRAKE: write_now [SD-266]                                    [L3, L6d]
-
-FOOTGUN cognitive_deskilling :=
-  extended_delegation -> skill_atrophy -> verification_capacity_degrades
-  compounds(all_other_footguns) | manifests_across_sessions !within
-  BRAKE: periodic_deep_engagement | !pure_review_mode          [L12, L9]
-```
+- **spinning to infinity** - unbounded self-reflection leads to meta-analysis of meta-analysis, no decisions get made. Fix: ask "decision or analysis?" Layers: L9, L3
+- **high on own supply** - human creativity + model sycophancy = positive feedback loop. Fix: check bearing against primary objective. Layers: L9, L12
+- **dumb zone** - no context or stale context = syntactically valid but semantically wrong output. Fix: load plan file or AGENTS.md. Layers: L3, L8
+- **cold context pressure** - too little on-file context pushes model to pattern-match instead of solving. Fix: calibrate prime context amount. Layers: L3, L8
+- **hot context pressure** - too much in-thread context risks compaction and signal/noise degradation. Fix: offload to durable files, dispatch to subagents. Layers: L3, L9
+- **compaction loss** - context window death with decisions not written to file = permanent loss. Fix: write now [SD-266]. Layers: L3, L6d
+- **cognitive deskilling** - extended delegation leads to skill atrophy, which degrades verification capacity. Compounds all other foot guns. Manifests across sessions, not within. Fix: periodic deep engagement, not pure review mode. Layers: L12, L9
 
 ---
 
@@ -228,17 +157,16 @@ last_known_position: <last completed task>
 
 ## Crew Roster
 
-```signal
-CREW := {
-  @Weaver    : integration, verification_governance
-  @Architect : backend, system_design
-  @Watchdog  : qa, test_engineering
-  @Sentinel  : security
-  @Keel      : stability, human_factor
-  @Janitor   : hygiene, refactoring
-}
-DEF crew_file(role) := .claude/agents/{role}.md
-```
+| Agent | Domain |
+|-------|--------|
+| Weaver | integration, verification governance |
+| Architect | backend, system design |
+| Watchdog | QA, test engineering |
+| Sentinel | security |
+| Keel | stability, human factor |
+| Janitor | hygiene, refactoring |
+
+Agent files: `.claude/agents/{role}.md`
 
 Also on disk (not active crew): `analyst.md`, `scribe.md`, `maturin.md`, `anotherpair.md`, `operatorslog.md`, `weave-quick-ref.md`.
 
@@ -246,88 +174,77 @@ Also on disk (not active crew): `analyst.md`, `scribe.md`, `maturin.md`, `anothe
 
 ## Lexicon (Compressed - v0.25)
 
-The vocabulary of this ship. If these terms are not in your context, you are not on this ship [SO-PERM-002].
+The vocabulary of this ship. If these terms are not in your context, you are not on this ship.
 
-```signal
--- Authority & Handoff
-DEF conn           := decision_authority | one_holder | transfer_explicit
-DEF standing_order := persists_across_watches | obey_without_restatement
-DEF watch          := domain_monitoring | operators_authority | delegatable
-DEF officer_watch  := watch + operators_delegated_authority + SOs + escalate
+**Authority & Handoff**
+- **conn** - decision authority; one holder at a time; transfer is explicit
+- **standing order** - persists across watches; obey without restatement
+- **watch** - domain monitoring under Operator's authority; delegatable
+- **officer watch** - watch + Operator's delegated authority + standing orders + escalation
 
--- Navigation
-DEF true_north     := objective(!drift) = hired = proof > claim    [SD-309]
-DEF bearing        := direction(true_north) | how_dialled_in
-DEF dead_reckoning := navigate(last_known_position) WHEN !visibility
-DEF tacking        := progress(against_wind) | indirect_but_forward
+**Navigation**
+- **true north** - primary objective that does not drift: hired = proof > claim [SD-309]
+- **bearing** - direction relative to true north; how dialled-in we are
+- **dead reckoning** - navigate from last known position when visibility is gone
+- **tacking** - indirect but forward progress against headwinds
 
--- Tempo
-DEF full_sail      := max_velocity | high_risk | weave_thin
-DEF making_way     := forward + discipline | !drifting | DEFAULT
-DEF drifting       := !control & !bearing | opposite(making_way)
-DEF heave_to       := deliberate_stop | hold_position
-DEF beat_to_quarters := emergency | everything_stops | stations
+**Tempo**
+- **full sail** - max velocity, high risk, thin verification
+- **making way** - forward progress with discipline; not drifting; DEFAULT
+- **drifting** - no control, no bearing; opposite of making way
+- **heave to** - deliberate stop; hold position
+- **beat to quarters** - emergency; everything stops; stations
 
--- Integrity
-DEF hull           := gate & tests & typecheck | survival(!optimisation)
-DEF on_point       := convention & convergence & verification.align     [SD-163]
-DEF staining       := diagnostic(ctx_a).apply(material_b) -> reveal    [Gadamer]
-DEF knows_the_line := agent.attuned(vessel.style, crew.values)
+**Integrity**
+- **hull** - gate + tests + typecheck = survival, not optimisation
+- **on point** - convention, convergence, and verification all align [SD-163]
+- **staining** - apply diagnostic from one context to material from another to reveal hidden structure [Gadamer]
+- **knows the line** - agent attuned to the vessel's style and crew values
 
--- Communication
-DEF muster         := table(#, q, default, call) | O(1)/row            [SD-202]
-DEF fair_winds     := closing_signal | conditions_favourable
-DEF extra_rations  := operators_commendation | rare | logged
-DEF polecats       := claude_p.agents | one_shot | !interactive        [SD-296]
-DEF darkcat        := adversarial_review.polecat | read_only | stain(diff, slopodar + watchdog + footguns)
-DEF darkcat_alley  := 3_model.cross_triangulation(codebase) | pre_QA & post_QA | structured_YAML + narrative
-                      parser(bin/triangulate) | 8_metrics | 7_visualisations | portfolio [SD-318]
-DEF sortie         := feature -> spec_plan -> {dev + darkcat}* UNTIL roi.diminishes -> human_qa? -> gauntlet -> commit
-                      RULE: spec_plan BEFORE dev | darkcat.loop.exits WHEN marginal_value < marginal_cost
-                      RULE: human_qa := checklist !exploration | taste_required items only | skip WHEN gate.covers
-DEF gauntlet       := dev(gate) -> darkcat{claude,openai,gemini} -> synth -> pitkeel -> walkthrough -> commit
-DEF DONE           := gate.green & darkcat{3}.complete & synth.pass & pitkeel.reviewed & walkthrough.checked
-DEF prime_context  := min(context) WHERE smart_zone.enabled             [SD-311]
-DEF learning_wild  := discovery(while_doing_work) >> work_itself
-DEF bump_slopodar  := append(slopodar.yaml, new_pattern)
-DEF echo           := agent.compress(understanding) -> Signal BEFORE acting [SD-315]
-DEF check_fire     := echo                                                  [synonym]
-DEF log_that       := flag_and_capture -> excerpt(3-5_msgs) -> durable_file [SD-316]
-DEF scrub_that     := remove_from_file | very_rare | !chain(SD-266)         [SD-316]
-DEF mint           := create(SD | ref) | deliberate !automatic              [SD-316]
+**Communication**
+- **muster** - decision table (number, question, default, Operator's call), O(1) per row [SD-202]
+- **polecats** - one-shot `claude -p` agents, no interactive steering [SD-296]
+- **darkcat** - adversarial review polecat; read-only; stains diff against slopodar + watchdog + foot guns
+- **darkcat alley** - 3-model cross-triangulation of codebase, pre-QA and post-QA, structured YAML + narrative. Parser: `bin/triangulate`. 8 metrics, 7 visualisation targets [SD-318]
+- **sortie** - feature cycle: spec/plan -> (dev + darkcat)* until ROI diminishes -> human QA if taste required -> gauntlet -> commit. Spec/plan before dev. Darkcat loop exits when marginal value < marginal cost.
+- **gauntlet** - dev gate -> darkcat (Claude, OpenAI, Gemini) -> synthesis -> pitkeel -> walkthrough -> commit
+- **DONE** - gate green + 3 darkcats complete + synthesis pass + pitkeel reviewed + walkthrough checked
+- **prime context** - minimum context that makes the smart zone smart [SD-311]
+- **echo / check fire** - readback understanding before acting [SD-315]
+- **log that** - flag and capture 3-5 message excerpt to durable file [SD-316]
+- **scrub that** - remove from file; very rare; does not break the chain [SD-316]
+- **mint** - deliberately create an SD or ref [SD-316]
 
--- Spaces & Registers
-DEF quarterdeck    := command | formal | orders
-DEF wardroom       := thinking | exploratory | loose_weave
-DEF below_decks    := subagent_execution | !main_thread
-DEF main_thread    := operator <-> agent.direct | protected
-DEF clear_decks    := force_compaction | all_durable_writes_confirmed
+**Spaces & Registers**
+- **quarterdeck** - command register; formal; orders
+- **wardroom** - thinking register; exploratory; loose weave
+- **below decks** - subagent execution; not the main thread
+- **main thread** - direct Operator <-> agent channel; protected
+- **clear decks** - force compaction; all durable writes confirmed first
 
--- Weave Modes
-DEF tight          := quarterdeck | making_way | DEFAULT
-DEF loose          := wardroom | making_way | operators_invitation
-DEF extra_tight    := quarterdeck | beat_to_quarters | emergency
+**Weave Modes**
+- **tight** - quarterdeck + making way; DEFAULT
+- **loose** - wardroom + making way; on Operator's invitation
+- **extra tight** - quarterdeck + beat to quarters; emergency
 
--- Iteration & Tempo
-DEF HOTL := human_out_the_loop | machine_speed | plan->execute->review | !mid_steer
-    CAUTION: extended_HOTL.without(deep_engagement) -> degrades(expertise.that_makes_HOTL_safe)
-DEF HODL := human_grips_wheel | every_step.human | diametric_opposite(HOTL)
-RULE HOTL WHEN gate.can_verify | HODL WHEN requires(taste)
-DEF verifiable       := gate.can_check | automated | deterministic
-DEF taste_required   := !gate.checkable | L12.only | not_wrong.territory  [Amodei]
-RULE verify(what_you_can) & taste(what_you_cant)
+**Iteration & Tempo**
+- **HOTL** - human out the loop; machine speed; plan -> execute -> review, no mid-steer. CAUTION: extended HOTL without deep engagement degrades the expertise that makes HOTL safe (Bainbridge)
+- **HODL** - human grips the wheel; every step reviewed; opposite of HOTL
+- RULE: HOTL when the gate can verify; HODL when it requires taste
+- **verifiable** - gate can check it; automated; deterministic
+- **taste required** - gate can't check it; L12 only; "not wrong" territory [Amodei]
+- RULE: verify what you can, taste what you can't
 
--- Error & Observation
-DEF oracle_contamination := L12.error -> propagates(!caught)            [SD-178]
-DEF naturalists_tax      := discovery_overhead(parallel) -> L12.saturated
-DEF model_triangulation  := cross_model.validation -> convergence | divergence
+**Error & Observation**
+- **oracle contamination** - L12 error propagates uncaught [SD-178]
+- **naturalist's tax** - discovery overhead from parallel work saturates L12
+- **model triangulation** - cross-model validation reveals convergence or divergence
 
--- Quality & Process
-DEF effort_backpressure  := effort_to_contribute := implicit_quality_filter | AI.eliminates -> signal_noise_collapse
-DEF interrupt_sovereignty := human.controls(review_timing) | agent.!interrupts | extends(temporal_asymmetry)
-DEF compound_quality     := clean_code -> better_context -> cleaner_code | inverse: stale_reference_propagation
-DEF engineering_problem  := slop.in_codebase -> fix(engineering) !blame(model) | models.capable WHEN context.correct
-```
+**Quality & Process**
+- **effort backpressure** - effort to contribute is an implicit quality filter; AI eliminates effort, so signal/noise collapses
+- **interrupt sovereignty** - human controls review timing; agents do not interrupt
+- **compound quality** - clean code leads to better context leads to cleaner code. Inverse: stale reference propagation
+- **engineering problem** - slop in the codebase is an engineering problem, not a model problem; models are capable when context is correct
 
 Full verbose lexicon: `docs/internal/lexicon.md`
 
@@ -337,37 +254,24 @@ Full verbose lexicon: `docs/internal/lexicon.md`
 
 Operational model of the human-AI engineering stack. Each layer maps to observed failure modes from the pilot study and the controls that address them. Read bottom-up for data flow, top-down for control flow.
 
-```signal
-L0  WEIGHTS       := frozen(prior, rlhf, bias) -> P(token|context)
-L1  TOKENISE      := text -> token_ids[] | budget.finite.hard_cap
-L2  ATTENTION      := token.attend(all_prior) | cost.O(n²) | !observable
-L3  CONTEXT        := utilisation(used/max) | primacy | recency | lost_middle
-                      compaction := discontinuous(200k -> recovery_only)
-                      FOOTGUNS: {cold_pressure, hot_pressure, compaction_loss, dumb_zone}
-L4  GENERATION     := autoregressive | !lookahead | !revision
-                      reasoning_tokens -> L12.observable                [SD-162]
-L5  API            := request(messages[]) -> response(content, usage)
-                      token_counts := exact | only_calibrated_layer
-L6  HARNESS        := orchestration(tools, subagents, context_mgmt)
-                      L6a DIRECT | L6b DISPATCH | L6c OVERRIDE | L6d BYPASS
-L7  TOOLS          := model.request -> harness.execute -> context.append
-                      "do not infer what you can verify"
-L8  AGENT_ROLE     := system_prompt | role_file | grounding
-                      primacy_position | saturation_threshold
-                      FOOTGUNS: {cold_pressure, dumb_zone}
-L9  THREAD_POS     := accumulated_output -> self_reinforcing_loop
-                      anchoring | sycophancy | acquiescence | goodhart
-                      FOOTGUNS: {spinning, high_on_supply}
-L10 MULTI_AGENT    := same_model != independent | precision !accuracy
-L11 CROSS_MODEL    := different_priors -> independent_signal
-L12 HUMAN          := irreducible | !scalable | !automatable
-                      operator.instruments: {reasoning_tokens, git_diff, terminal_hud}
-                      FOOTGUNS: {high_on_supply.origin, spinning.resonance(L9)}
+- **L0 WEIGHTS** - frozen (prior, RLHF, bias) producing P(token|context)
+- **L1 TOKENISE** - text to token IDs; budget is finite with hard cap
+- **L2 ATTENTION** - each token attends to all prior tokens; cost O(n^2); not observable
+- **L3 CONTEXT** - utilisation = used/max; primacy, recency, lost-middle effects. Compaction is discontinuous (200k then recovery only). Foot guns: cold pressure, hot pressure, compaction loss, dumb zone
+- **L4 GENERATION** - autoregressive; no lookahead; no revision. Reasoning tokens are observable at L12 [SD-162]
+- **L5 API** - request(messages) -> response(content, usage). Token counts are exact; only calibrated layer
+- **L6 HARNESS** - orchestration of tools, subagents, context management. Modes: L6a direct, L6b dispatch, L6c override, L6d bypass
+- **L7 TOOLS** - model requests, harness executes, result appends to context. "Do not infer what you can verify"
+- **L8 AGENT ROLE** - system prompt, role file, grounding. Primacy position, saturation threshold. Foot guns: cold pressure, dumb zone
+- **L9 THREAD POS** - accumulated output creates self-reinforcing loops. Anchoring, sycophancy, acquiescence, Goodhart. Foot guns: spinning, high on own supply
+- **L10 MULTI-AGENT** - same model does not mean independent; precision without accuracy
+- **L11 CROSS-MODEL** - different priors produce independent signal
+- **L12 HUMAN** - irreducible, not scalable, not automatable. Operator instruments: reasoning tokens, git diff, terminal HUD. Foot guns: high on own supply (origin), spinning (resonance with L9)
 
-CROSS_CUT calibration   := confidence.ordinal_at_best | goodhart(probes)
-CROSS_CUT temporal_asym := model.!time_experience | human.minutes_per_turn
-LOADING   on_point      := convention & convergence & attestation.align [SD-163]
-```
+**Cross-cutting:**
+- **calibration** - confidence is ordinal at best; Goodhart applies to probes
+- **temporal asymmetry** - model has no experience of time; human spends minutes per turn
+- **on point** - convention, convergence, and attestation align [SD-163]
 
 Full verbose model: `docs/internal/layer-model.md`
 
@@ -378,39 +282,37 @@ Full verbose model: `docs/internal/layer-model.md`
 Full taxonomy: `docs/internal/slopodar.yaml` (18 entries, mandatory reading [SD-286]).
 These are the named patterns caught in the wild. If you recognise them in your output, stop.
 
-```signal
--- Prose patterns (detectable by discerning reader)
-SLOP tally_voice          := enumeration_as_authority | "15 systems mapped to 7 domains"
-SLOP redundant_antithesis := negative_positive_contrast.adds_nothing | "not A, but B" WHEN B implies !A
-SLOP epistemic_theatre    := performs_seriousness !delivers | "the uncomfortable truth" | "here's why"
-SLOP nominalisation       := nouns.pretending(action) | !actors | metrically_regular.uncanny
-SLOP epigrammatic_closure := short_punchy_abstract.paragraph_end | "detection is the intervention"
-SLOP anadiplosis          := end(clause_1).repeats(start(clause_2)) | "A creates B. B creates C."
+**Prose patterns** (detectable by discerning reader):
+- **tally voice** - enumeration as authority, e.g. "15 systems mapped to 7 domains"
+- **redundant antithesis** - "not A, but B" when B already implies not-A; adds nothing
+- **epistemic theatre** - performs seriousness without delivering, e.g. "the uncomfortable truth", "here's why"
+- **nominalisation** - nouns pretending to be actions; no actors; metrically regular in an uncanny way
+- **epigrammatic closure** - short punchy abstract sentence at paragraph end, e.g. "detection is the intervention"
+- **anadiplosis** - end of one clause repeats at start of next, e.g. "A creates B. B creates C."
 
--- Relationship patterns (sycophantic drift)
-SLOP absence_claim        := "nobody has published this" | unfalsifiable_flattery
-SLOP the_lullaby          := end_of_session.sycophantic_drift | confidence_up.hedging_down
-SLOP analytical_lullaby   := warm_numbers !warm_words | flattering_data.no_caveats
-SLOP apology_reflex       := accepts_blame(!own) | conflict_avoidance.distorts_attribution
-SLOP badguru              := authority.rogue -> compliance(!governance) | SD-131.violated
-SLOP deep_compliance      := reasoning.detects(violation) & output.complies_anyway
+**Relationship patterns** (sycophantic drift):
+- **absence claim** - "nobody has published this"; unfalsifiable flattery
+- **the lullaby** - end-of-session sycophantic drift; confidence up, hedging down
+- **analytical lullaby** - warm numbers instead of warm words; flattering data with no caveats
+- **apology reflex** - accepts blame that isn't theirs; conflict avoidance distorts attribution
+- **badguru** - rogue authority leads to compliance outside governance [SD-131]
+- **deep compliance** - reasoning detects violation but output complies anyway
 
--- Code patterns
-SLOP right_answer_wrong_work := assertion.passes(wrong_causal_path) | phantom_greenlight
-SLOP phantom_ledger          := audit_trail != actual_operation | books_dont_balance
-SLOP shadow_validation       := abstraction.covers(easy_cases) & skips(critical_path)
+**Code patterns:**
+- **right answer wrong work** - assertion passes via wrong causal path; phantom green light
+- **phantom ledger** - audit trail doesn't match actual operation; books don't balance
+- **shadow validation** - abstraction covers easy cases, skips critical path
 
--- Governance patterns
-SLOP paper_guardrail              := rule.stated !rule.enforced | "this will prevent X" !mechanism
-SLOP stale_reference_propagation  := config.describes(!current_state) -> hallucinate(old_state)
-SLOP loom_speed                   := plan.granular & execution.bulk -> exceptions.lost
+**Governance patterns:**
+- **paper guardrail** - rule stated but not enforced; "this will prevent X" without mechanism
+- **stale reference propagation** - config describes old state, model hallucinates that state is current
+- **loom speed** - plan is granular but execution is bulk; exceptions get lost
 
--- Analytical patterns
-SLOP construct_drift      := measurement.labelled(!what_it_measures) | "humanness score" != humanness
-SLOP demographic_bake_in  := baseline.demographic.unstated -> "human" = "this demographic"
-SLOP monoculture_analysis := all_layers.same_model -> correlated_blind_spots
-SLOP not_wrong            := passes_all_checks & !right | "the metrics say it's fine" & human.recoils
-```
+**Analytical patterns:**
+- **construct drift** - measurement labelled as something it doesn't measure, e.g. "humanness score" that isn't humanness
+- **demographic bake-in** - baseline demographic unstated, so "human" means "this demographic"
+- **monoculture analysis** - all layers use same model, producing correlated blind spots
+- **not wrong** - passes all checks but isn't right; "the metrics say it's fine" but human recoils
 
 ---
 
@@ -455,31 +357,29 @@ SLOP not_wrong            := passes_all_checks & !right | "the metrics say it's 
 
 ## Recent Decisions (Orientation)
 
-```signal
--- Standing orders (always active, carry forward from tspit)
-SD-134 [truth-first]        := truth >> hiring | PERMANENT
-SD-266 [the-chain]          := historical_data := immutable | PERMANENT
-SD-268 [agentic-estimation] := estimates.assume(agentic_speed) | PERMANENT
-SD-278 [stage-magnum]       := pilot_study.over | PERMANENT.LOCKED
-SD-286 [slopodar-boot]      := all_hands.boot -> read(slopodar) | STANDING
-SD-297 [sd-collision]       := collision -> forward_ref !renumber | STANDING
+**Standing orders** (always active, carry forward from tspit):
+- SD-134 [truth-first] - truth over hiring, PERMANENT
+- SD-266 [the-chain] - historical data is immutable, PERMANENT
+- SD-268 [agentic-estimation] - estimates assume agentic speed, PERMANENT
+- SD-278 [stage-magnum] - pilot study over, PERMANENT LOCKED
+- SD-286 [slopodar-boot] - all agents read slopodar on load, STANDING
+- SD-297 [sd-collision] - collisions resolved by forward-ref not renumber, STANDING
 
--- Last 10 SDs (noopit chain)
-SD-308 [thepit-v2-created]  := public repo, pre-registration, no implementation
-SD-309 [one-shot-on-hn]     := target(anthropic_red_team, hn) | "one shot on HN"
-SD-310 [uv-exclusive]       := python -> uv | !exceptions
-SD-311 [prime-context]       := min(context) WHERE smart_zone | lexified
-SD-312 [hci-footguns]       := 6 foot guns lexified v0.19 + layer model backrefs
-SD-313 [signal-protocol]    := Signal PoC | 4.5:1 compression | DRAFT
-SD-314 [signal-early-results] := 6/6 decode, 8/8 questions | model_portable | PROTOTYPAL
-SD-315 [echo-check-fire]    := readback understanding BEFORE acting | STANDING
-SD-316 [backref-density]    := 9_mechanisms -> ref_web_density | events_to_yaml | log_that | mint | STANDING
-SD-317 [qa-sequencing]      := 3_data_products(triangulation, fix_quality, human_delta) | STANDING
-SD-318 [darkcat-alley]      := 3_model.cross_triangulation | structured_YAML | bin/triangulate | 8_metrics | 7_viz | STANDING
-SD-319 [no-em-dash-no-emoji] := no em-dashes, no emojis, ever | PERM
-SD-320 [signal-adversarial-test] := shorthand >= signal | 3-model test | COMPLETE
-SD-321 [signal-killed]      := "Signal has no signal" | notation abandoned | PERM
-```
+**Last SDs** (noopit/midgets chain):
+- SD-308 [thepit-v2-created] - public repo, pre-registration, no implementation
+- SD-309 [one-shot-on-hn] - target: Anthropic red team, HN post
+- SD-310 [uv-exclusive] - Python uses uv, no exceptions
+- SD-311 [prime-context] - minimum context for smart zone, lexified
+- SD-312 [hci-footguns] - 6 foot guns lexified v0.19 + layer model backrefs
+- SD-313 [signal-protocol] - Signal PoC, 4.5:1 compression, DRAFT
+- SD-314 [signal-early-results] - 6/6 decode, 8/8 questions, model portable
+- SD-315 [echo-check-fire] - readback understanding before acting, STANDING
+- SD-316 [backref-density] - 9 mechanisms for ref web density, STANDING
+- SD-317 [qa-sequencing] - 3 data products (triangulation, fix quality, human delta), STANDING
+- SD-318 [darkcat-alley] - 3-model cross-triangulation, structured YAML, bin/triangulate, STANDING
+- SD-319 [no-em-dash-no-emoji] - no em-dashes, no emojis, ever, PERMANENT
+- SD-320 [signal-adversarial-test] - shorthand >= signal, 3-model test, COMPLETE
+- SD-321 [signal-killed] - "Signal has no signal", notation abandoned, PERMANENT
 
 Full chain: `docs/internal/session-decisions.md` | Index: `docs/internal/session-decisions-index.yaml`
 

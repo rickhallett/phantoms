@@ -6,7 +6,7 @@
 
 ## Observation
 
-AGENTS.md boot sequence (S0 auto-load: CLAUDE.md + AGENTS.md + agent file) lands Weaver at operational readiness — identity, standing orders, vocabulary (compressed), gate, HUD spec, lexicon (compressed), slopodar (compressed), layer model (compressed), recent SDs — at **~19k tokens** on the Operator's read.
+AGENTS.md boot sequence (S0 auto-load: CLAUDE.md + AGENTS.md + agent file) lands Weaver at operational readiness - identity, standing orders, vocabulary (compressed), gate, HUD spec, lexicon (compressed), slopodar (compressed), layer model (compressed), recent SDs - at **~19k tokens** on the Operator's read.
 
 This is the result of Signal compression [SD-313, SD-314] and the AGENTS.md consolidation. Prior to Signal, the equivalent prime context required multiple file reads at S1/S2 before the agent could communicate in-vocabulary.
 
@@ -22,8 +22,6 @@ This validates the Signal compression hypothesis [SD-314]: governance can be tra
 
 ## Classification
 
-```signal
-DEF boot_budget := ~19kTok | ~10%.context | operational_ready
-VALIDATES := SD-313(signal_compression) & SD-311(prime_context)
-IMPLICATION := S1_reads.optional_for_basic_ops | S1_reads.required_for_depth
-```
+- **Boot budget:** ~19k tokens, ~10% of context, operationally ready
+- **Validates:** SD-313 (signal compression) and SD-311 (prime context)
+- **Implication:** S1 reads are optional for basic ops but required for depth
