@@ -315,18 +315,26 @@ CMD ?=
 
 watch:
 	@echo "Starting midget with VNC on localhost:5900..."
-	@CONTAINER_ID=$$(docker run -d --rm \
-		-e MIDGET_VNC=1 \
-		-p 5900:5900 \
-		$(MIDGET_IMAGE) \
-		$(CMD)); \
-	echo "Container: $$CONTAINER_ID"; \
-	echo "Connect VNC viewer to localhost:5900"; \
-	echo "Press Ctrl+C to stop."; \
-	echo ""; \
-	sleep 2; \
-	docker logs -f $$CONTAINER_ID || true; \
-	docker stop $$CONTAINER_ID 2>/dev/null || true
+	@if [ -z "$(CMD)" ]; then \
+		echo "Interactive shell. Connect VNC viewer to localhost:5900"; \
+		echo "Ctrl+C to stop."; \
+		docker run --rm -it \
+			-e MIDGET_VNC=1 \
+			-p 5900:5900 \
+			$(MIDGET_IMAGE); \
+	else \
+		CONTAINER_ID=$$(docker run -d \
+			-e MIDGET_VNC=1 \
+			-p 5900:5900 \
+			$(MIDGET_IMAGE) \
+			bash -c "$(CMD); echo 'CMD finished, container stays for VNC. Ctrl+C to stop.'; sleep infinity"); \
+		echo "Container: $$CONTAINER_ID"; \
+		echo "Connect VNC viewer to localhost:5900"; \
+		echo "Ctrl+C to stop."; \
+		echo ""; \
+		trap "docker stop $$CONTAINER_ID >/dev/null 2>&1; docker rm $$CONTAINER_ID >/dev/null 2>&1" EXIT INT TERM; \
+		docker logs -f $$CONTAINER_ID; \
+	fi
 
 .PHONY: all status graph clean install-hooks gate interop swarm crew-test crew watch
 .PHONY: ebook ebook-prep ebook-epub ebook-slim ebook-slim-prep ebook-slim-epub ebook-all ebook-clean
