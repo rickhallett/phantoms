@@ -321,12 +321,14 @@ watch:
 		echo "Interactive shell. Connect VNC viewer to localhost:5900"; \
 		echo "Ctrl+C to stop."; \
 		docker run --rm -it \
+			--cpus 2 --memory 4g \
 			-e MIDGET_VNC=1 \
 			-e MIDGET_ROLE="$(ROLE)" \
 			-p 5900:5900 \
 			$(MIDGET_IMAGE); \
 	else \
 		CONTAINER_ID=$$(docker run -d \
+			--cpus 2 --memory 4g \
 			-e MIDGET_VNC=1 \
 			-e MIDGET_ROLE="$(ROLE)" \
 			-p 5900:5900 \

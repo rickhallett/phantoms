@@ -16,6 +16,8 @@
 set -e
 
 IMAGE="midget-poc"
+MIDGET_CPUS="${MIDGET_CPUS:-2}"
+MIDGET_MEMORY="${MIDGET_MEMORY:-4g}"
 VOL_REPO="crew-live-repo-$$"
 VOL_JOBS="crew-live-jobs-$$"
 CREW_DIR="$(cd "$(dirname "$0")" && pwd)/crew"
@@ -149,6 +151,7 @@ run_gemini() {
     stage_prompt "$ROLE" "$PROMPT_FILE"
 
     docker run --rm \
+        --cpus "$MIDGET_CPUS" --memory "$MIDGET_MEMORY" \
         --label midget=true \
         --label midget.role="$ROLE" \
         --label midget.run="$RUN_ID" \
@@ -192,6 +195,7 @@ run_grok() {
     # We ask it to output ONLY the YAML content.
     # Full API response preserved as trace for audit.
     docker run --rm \
+        --cpus "$MIDGET_CPUS" --memory "$MIDGET_MEMORY" \
         --label midget=true \
         --label midget.role="$ROLE" \
         --label midget.run="$RUN_ID" \
@@ -257,6 +261,7 @@ run_codex() {
     stage_prompt "$ROLE" "$PROMPT_FILE"
 
     docker run --rm \
+        --cpus "$MIDGET_CPUS" --memory "$MIDGET_MEMORY" \
         --label midget=true \
         --label midget.role="$ROLE" \
         --label midget.run="$RUN_ID" \

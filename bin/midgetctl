@@ -359,10 +359,7 @@ def cmd_run(args):
         "--label", f"{LABEL_PREFIX}.role={role}",
     ]
 
-    if args.cpus:
-        label_args += ["--cpus", str(args.cpus)]
-    if args.memory:
-        label_args += ["--memory", args.memory]
+    label_args += ["--cpus", str(args.cpus), "--memory", args.memory]
 
     cmd = ["docker", "run", "-d", "--name", f"midget-{role}-{os.getpid()}"]
     cmd += env_args + label_args
@@ -502,8 +499,8 @@ def main():
     p.add_argument("role", help="Agent role (e.g. watchdog, weaver, sentinel)")
     p.add_argument("--vnc", action="store_true", help="Enable VNC")
     p.add_argument("--vnc-port", type=int, default=5900, help="Host VNC port")
-    p.add_argument("--cpus", type=float, help="CPU limit (e.g. 2.0)")
-    p.add_argument("--memory", help="Memory limit (e.g. 4g)")
+    p.add_argument("--cpus", type=float, default=2.0, help="CPU limit (default: 2)")
+    p.add_argument("--memory", default="4g", help="Memory limit (default: 4g)")
     p.add_argument("--cmd", help="Command to run inside midget")
 
     args = parser.parse_args()
