@@ -369,6 +369,110 @@ verdict:
   triangulated: $(if [ "$FAIL_COUNT" -gt 0 ]; then echo "FAIL"; elif [ "$MISSING_COUNT" -gt 0 ]; then echo "INCOMPLETE"; else echo "PASS"; fi)
 METAEOF
 
+# 7. Extract token usage from traces
+echo ""
+echo "--- Token Usage ---"
+
+python3 - "$ARTIFACT_DIR" << 'TOKENEOF'
+import json, sys, os, glob
+
+artifact_dir = sys.argv[1]
+usage = {}
+
+# Gemini: .stats.models.*.tokens in single JSON
+for f in glob.glob(os.path.join(artifact_dir, "*-trace.json")):
+    role = os.path.basename(f).replace("-trace.json", "")
+    try:
+        with open(f) as fh:
+            data = json.load(fh)
+        # Gemini format: .stats.models.<model>.tokens
+        stats = data.get("stats", {}).get("models", {})
+        for model_name, model_data in stats.items():
+            tokens = model_data.get("tokens", {})
+            usage[role] = {
+                "model": model_name,
+                "input_tokens": tokens.get("input", 0),
+                "output_tokens": tokens.get("candidates", 0),
+                "thinking_tokens": tokens.get("thoughts", 0),
+                "cached_tokens": tokens.get("cached", 0),
+                "total_tokens": tokens.get("total", 0),
+            }
+            break
+        if role in usage:
+            continue
+        # xAI/OpenAI format: .usage at top level
+        u = data.get("usage", {})
+        if u:
+            usage[role] = {
+                "model": data.get("model", "unknown"),
+                "input_tokens": u.get("prompt_tokens", 0),
+                "output_tokens": u.get("completion_tokens", 0),
+                "thinking_tokens": u.get("completion_tokens_details", {}).get("reasoning_tokens", 0),
+                "cached_tokens": u.get("prompt_tokens_details", {}).get("cached_tokens", 0),
+                "total_tokens": u.get("total_tokens", 0),
+            }
+            cost_ticks = u.get("cost_in_usd_ticks")
+            if cost_ticks is not None:
+                usage[role]["cost_usd"] = cost_ticks / 1_000_000
+    except Exception as e:
+        print(f"  {role}: trace parse error: {e}", file=sys.stderr)
+
+# Codex: JSONL, sum usage from turn.completed events
+for f in glob.glob(os.path.join(artifact_dir, "*-trace.jsonl")):
+    role = os.path.basename(f).replace("-trace.jsonl", "")
+    input_t = 0
+    output_t = 0
+    cached_t = 0
+    try:
+        with open(f) as fh:
+            for line in fh:
+                line = line.strip()
+                if not line:
+                    continue
+                evt = json.loads(line)
+                if evt.get("type") == "turn.completed":
+                    u = evt.get("usage", {})
+                    input_t += u.get("input_tokens", 0)
+                    output_t += u.get("output_tokens", 0)
+                    cached_t += u.get("cached_input_tokens", 0)
+        if input_t or output_t:
+            usage[role] = {
+                "model": "codex-default",
+                "input_tokens": input_t,
+                "output_tokens": output_t,
+                "cached_tokens": cached_t,
+                "total_tokens": input_t + output_t,
+            }
+    except Exception as e:
+        print(f"  {role}: trace parse error: {e}", file=sys.stderr)
+
+# Print summary
+total_all = 0
+for role in sorted(usage.keys()):
+    u = usage[role]
+    total_all += u.get("total_tokens", 0)
+    cost_str = ""
+    if "cost_usd" in u:
+        cost_str = f"  cost=${u['cost_usd']:.4f}"
+    print(f"  {role} ({u['model']}): in={u['input_tokens']} out={u['output_tokens']} total={u['total_tokens']}{cost_str}")
+print(f"  ---")
+print(f"  total tokens: {total_all}")
+
+# Write usage YAML
+usage_path = os.path.join(artifact_dir, "token-usage.yaml")
+with open(usage_path, "w") as fh:
+    fh.write("# Token usage per crew member\n")
+    for role in sorted(usage.keys()):
+        u = usage[role]
+        fh.write(f"{role}:\n")
+        for k, v in u.items():
+            fh.write(f"  {k}: {v}\n")
+    fh.write(f"total_tokens: {total_all}\n")
+
+if not usage:
+    print("  no traces found (run predates trace capture?)")
+TOKENEOF
+
 echo "  artifacts saved to $ARTIFACT_DIR/"
 ls -1 "$ARTIFACT_DIR/"
 echo ""
