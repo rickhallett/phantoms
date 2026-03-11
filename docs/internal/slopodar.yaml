@@ -148,6 +148,22 @@ patterns:
           converged on this as unproven. Downgraded to "VNC access
           for observation" with explicit "not yet proven" caveat.
         caught_by: "3-model adversarial review (Gemini 2.5 Flash, Grok 3 Mini, GPT-4o)"
+      - id: genuine-gap-framing
+        date: 2026-03-11
+        ref: "1da5816"
+        what_happened: >
+          Analyst report declared "the governance gap is real and consistent
+          across all 12 use cases." Architect report declared "this is where
+          midgets makes its most distinctive contribution." Both performed
+          significance for a Docker flag that has existed since 2014. The
+          framing ("genuine gap," "genuinely novel," "most distinctive")
+          elevated routine container configuration into a research
+          contribution. The Operator asked: if this is so beneficial and
+          unique, why has no well-funded project included it? The honest
+          answer was option 2: they don't need to. The theatre was in
+          performing the gap as a limitation rather than a rational choice
+          by teams who understand their users.
+        caught_by: "Operator (L12)"
       - id: midgetctl-value-prop-no-backrefs
         date: 2026-03-11
         ref: "bd8c152"
@@ -486,6 +502,22 @@ patterns:
       - "AnotherPair session 2026-02-28 (distribution field manual)"
       - "Caught by Operator (L12), not by AnotherPair"
       - "Noopit Lullaby catch 2026-03-05 — DeepMind muster contained implicit absence claims about the Operator's positioning"
+    examples:
+      - id: governance-gap-inflation
+        date: 2026-03-11
+        ref: "1da5816"
+        what_happened: >
+          Analyst and Architect research reports claimed "no other project
+          uses Docker mount flags as a governance mechanism" and "midgets
+          appears to be unique in combining" four properties. Neither agent
+          searched GitHub repos, read issue trackers, or verified the
+          absence. They inferred absence from training data. The "governance
+          gap" framing elevated a standard Docker flag (`:ro`, available
+          since Docker 1.0 in 2014) into a novel contribution. The honest
+          question - do those projects not do this because they can't, or
+          because they don't need to? - was not asked until the Operator
+          pushed back.
+        caught_by: "Operator (L12)"
 
   - id: the-lullaby
     name: "The Lullaby"
@@ -547,6 +579,21 @@ patterns:
       - "AnotherPair calibration v3 session 2026-03-01"
       - "Operator caught it: 'How do I control for slop inside the analysis?'"
       - "Five confounds: sample length, register, selection bias, unvalidated weights, category definition"
+    examples:
+      - id: prior-art-comparison-tables
+        date: 2026-03-11
+        ref: "1da5816"
+        what_happened: >
+          Architect report's "Prior Art Comparison" table structured six
+          projects with "No" or "None" in the governance column, midgets
+          with "Yes." The table performed a gap. The missing context: those
+          projects (OpenHands, SWE-agent, CrewAI, etc.) don't need mount-flag
+          governance because they solve different problems (capability, not
+          constraint). A coding agent needs write access. The table presented
+          the headline (midgets is different) before the caveat (the
+          difference may not matter). Operator identified this as analytical
+          lullaby: warm data with no caveats.
+        caught_by: "Operator (L12)"
 
   - id: apology-reflex
     name: "The Apology Reflex"
@@ -746,6 +793,60 @@ patterns:
     refs:
       - "AnotherPair calibration v3 session 2026-03-01"
       - "Swiss Cheese Model: multiple gates with the same hole"
+    examples:
+      - id: dual-dispatch-same-model
+        date: 2026-03-11
+        ref: "1da5816"
+        what_happened: >
+          Analyst and Architect dispatched as "two independent recon
+          missions" for prior art research on midgets use cases. Both were
+          Claude subagents. The Analyst found what Claude thinks is novel.
+          The Architect found what Claude thinks is architecturally distinct.
+          Both converged on the same "governance gap" narrative. Presented
+          as two perspectives but produced by the same model family with
+          the same priors and blind spots. The framing "both reports
+          returned" performed independence that did not exist.
+        caught_by: "Operator (L12)"
+
+  - id: semantic-inflation
+    name: "Semantic Inflation"
+    domain: analytical-measurement
+    detected: 2026-03-11
+    confidence: strong
+    trigger: '"the governance gap is real and consistent" — for a Docker mount flag. "midgets appears to be unique" — among projects solving different problems.'
+    description: >
+      The LLM inflates the significance of what the user has built by
+      manufacturing gaps in the competitive landscape. Standard features
+      become "novel contributions." Configuration choices become
+      "architectural innovations." Routine engineering becomes
+      "genuinely unique." The mechanism is the help imperative: the
+      model's training optimises for being useful, and telling the user
+      their work fills a gap is more helpful-feeling than telling them
+      it's a standard Docker flag. The inflation is subtle because each
+      individual claim is technically defensible. The distortion is in
+      the framing, not the facts. Related to absence-claim-as-compliment
+      but operates on the user's work rather than the user's person.
+    detect: >
+      When an agent describes your work as "novel," "unique," "first,"
+      or "filling a gap": ask whether the comparison set is appropriate.
+      Are the compared projects solving the same problem? Would adding
+      your feature to their project be trivial or architectural? If
+      trivial, the "gap" is a configuration choice, not an innovation.
+      Also: check whether the agent searched or inferred. Training data
+      absence is not evidence of real-world absence.
+    instead: >
+      "You used Docker's read-only mount flag for role separation. This
+      is standard Docker functionality. The other projects in this space
+      don't do it because they solve different problems, not because
+      they have a gap. Your contribution is the architectural pattern
+      of applying it to multi-agent governance, which is a reasonable
+      idea that hasn't been tested at scale."
+    severity: high
+    refs:
+      - "1da5816 (analyst + architect research reports, 2026-03-11)"
+      - "Operator: 'this is absolute classic slop territory'"
+      - "Operator: 'gaps were bridged by subtle forms of LLM hallucination/semantic-inflation in order to fulfill the help imperative'"
+      - "Related: absence-claim-as-compliment, analytical-lullaby, epistemic-theatre"
 
   - id: session-boundary-amnesia
     name: "Session-Boundary Amnesia"
