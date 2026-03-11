@@ -67,6 +67,10 @@ COPY test-ocr.sh /opt/test-ocr.sh
 COPY test-chromium.sh /opt/test-chromium.sh
 COPY test-agent.sh /opt/test-agent.sh
 COPY test-jobs.sh /opt/test-jobs.sh
+# Neuter fbsetbg - fluxbox calls it on startup to set wallpaper,
+# but no wallpaper setter is installed, causing an xmessage popup.
+RUN printf '#!/bin/sh\nexit 0\n' > /usr/bin/fbsetbg
+
 RUN chmod +x /opt/entrypoint.sh /opt/steer/steer /opt/steer/drive \
         /opt/steer/jobrunner \
         /opt/test-poc.sh /opt/test-drive.sh /opt/test-ocr.sh \
