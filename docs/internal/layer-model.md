@@ -143,7 +143,18 @@ L12 HUMAN_IN_LOOP  | operators_walkthrough · manual_qa · domain_expertise · t
                    | [EVIDENCE: arXiv:2602.11988 — context pollution degrades human O(1)→O(n). 52→7 file reduction restored O(1) triage (SD-195)]
                    | Cannot be scaled. Cannot be automated. Cannot be replaced. Can be informed by L0-L11.
                    | L12 also functions as out-of-band backup storage when L3 fails. Operator restored layer model annotations from memory after compaction (SD-205). L12 is not only decision + verification — it is state persistence of last resort.
-                   | HCI FOOT GUNS: High on Own Supply originates here — L12 creativity is unbounded and L9 sycophancy provides positive feedback without braking. The antidote is the bearing check against True North. Spinning to Infinity is the L12↔L9 resonance mode where the mirror runs unsupervised. Both lexified v0.19.
+                    | HCI FOOT GUNS: High on Own Supply originates here — L12 creativity is unbounded and L9 sycophancy provides positive feedback without braking. The antidote is the bearing check against True North. Spinning to Infinity is the L12↔L9 resonance mode where the mirror runs unsupervised. Both lexified v0.19.
+                    | AFFECTIVE DYNAMICS (HYPOTHESIS): L12 is not a fixed function. Human capacity varies with engagement,
+                    |   motivation, fatigue, and emotional state. L8 agent identity framing (metaphor, register, ceremony)
+                    |   modulates L12 state through affective feedback loops. Positive loops (shared frame -> engagement ->
+                    |   verification quality -> frame reinforcement) are structurally distinct from negative loops (sycophancy ->
+                    |   acceptance -> quality degradation) despite sharing the L8-L12 resonance mechanism. The difference: sycophancy
+                    |   flatters output, identity framing enriches role. One degrades verification, the other strengthens it.
+                    |   If true: agent identity design is load-bearing for system reliability, not cosmetic. Cognitive deskilling
+                    |   has a countermeasure beyond "periodic deep engagement" - make the human want to engage.
+                    |   Status: plausible hypothesis, n=1 across 200+ sessions, mechanism is structural and testable.
+                    |   [docs/internal/l12-affective-dynamics.md — verbatim wardroom analysis, 2026-03-11]
+                    |   [docs/internal/mode-larp.md — the identity frame that produced the observation]
                    | The human's experience of the system is: terminal_input → wait → read_response → terminal_input.
                    | The human's instruments: reasoning tokens (L4→L6 render), response text, git diff, Vercel dashboard,
                    |   PostHog (consent-gated), token consumption reports (unverified source, SD-164).

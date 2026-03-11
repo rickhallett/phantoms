@@ -275,7 +275,7 @@ Operational model of the human-AI engineering stack. Each layer maps to observed
 - **L9 THREAD POS** - accumulated output creates self-reinforcing loops. Anchoring, sycophancy, acquiescence, Goodhart. Foot guns: spinning, high on own supply
 - **L10 MULTI-AGENT** - same model does not mean independent; precision without accuracy
 - **L11 CROSS-MODEL** - different priors produce independent signal
-- **L12 HUMAN** - irreducible, not scalable, not automatable. Operator instruments: reasoning tokens, git diff, terminal HUD. Foot guns: high on own supply (origin), spinning (resonance with L9)
+- **L12 HUMAN** - irreducible, not scalable, not automatable. Not a fixed function - capacity varies with engagement, motivation, fatigue. L8 identity framing modulates L12 state (hypothesis, `docs/internal/l12-affective-dynamics.md`). Operator instruments: reasoning tokens, git diff, terminal HUD. Foot guns: high on own supply (origin), spinning (resonance with L9)
 
 **Cross-cutting:**
 - **calibration** - confidence is ordinal at best; Goodhart applies to probes
