@@ -86,19 +86,23 @@ echo "  Sent steer (Rust), waiting for response..."
 sleep 15
 
 # Check for Rust output
+# Must match multiple Rust-specific tokens to avoid false positives.
+# "fn " alone matches English ("function"). Require fn + type annotation.
 OUTPUT2=$(docker exec "$CONTAINER" cat /tmp/agent-output.jsonl 2>/dev/null || true)
-if printf '%s' "$OUTPUT2" | grep -qE "(fn |-> |i32|i64)"; then
-    pass "agent switched to Rust after steer"
+HAS_FN_DECL=$(printf '%s' "$OUTPUT2" | grep -cE "fn [a-z_]+\(" || true)
+HAS_RUST_TYPE=$(printf '%s' "$OUTPUT2" | grep -cE "(i32|i64|f64|usize|-> )" || true)
+if [ "$HAS_FN_DECL" -ge 1 ] && [ "$HAS_RUST_TYPE" -ge 1 ]; then
+    pass "agent switched to Rust after steer (fn decl + type annotation)"
 else
-    fail "agent switched to Rust after steer"
+    fail "agent switched to Rust after steer (fn_decl=$HAS_FN_DECL, rust_type=$HAS_RUST_TYPE)"
 fi
 
 # T1.3: verify both outputs exist (agent processed both messages)
-if printf '%s' "$OUTPUT2" | grep -q "def add_numbers" && \
-   printf '%s' "$OUTPUT2" | grep -qE "(fn |-> |i32|i64)"; then
+HAS_PYTHON=$(printf '%s' "$OUTPUT2" | grep -c "def add_numbers" || true)
+if [ "$HAS_PYTHON" -ge 1 ] && [ "$HAS_FN_DECL" -ge 1 ] && [ "$HAS_RUST_TYPE" -ge 1 ]; then
     pass "agent acted on both initial task and mid-flight steer"
 else
-    fail "agent acted on both messages"
+    fail "agent acted on both messages (python=$HAS_PYTHON, fn=$HAS_FN_DECL, type=$HAS_RUST_TYPE)"
 fi
 
 docker rm -f "$CONTAINER" >/dev/null 2>&1

@@ -135,6 +135,32 @@ patterns:
           narrative performed significance where a trivial test passed.
           Operator asked: "why does this sound like bullshit to me?"
         caught_by: "Operator (L12)"
+      - id: midgetctl-vnc-visual-audit
+        date: 2026-03-11
+        ref: "bd8c152"
+        what_happened: >
+          value-proposition.md claimed "Visual audit via VNC" as a
+          key differentiator of midgets. The entrypoint sets the
+          fluxbox toolbar title, midgetctl watch connects a viewer,
+          but no test connects to VNC or verifies what is displayed.
+          The claim "visual audit" performed a capability that was
+          aspirational, not demonstrated. Three independent models
+          converged on this as unproven. Downgraded to "VNC access
+          for observation" with explicit "not yet proven" caveat.
+        caught_by: "3-model adversarial review (Gemini 2.5 Flash, Grok 3 Mini, GPT-4o)"
+      - id: midgetctl-value-prop-no-backrefs
+        date: 2026-03-11
+        ref: "bd8c152"
+        what_happened: >
+          value-proposition.md claimed E2E testing, model-agnostic
+          isolation, full environment isolation, and reproducible
+          starting state as capabilities. All four are proven by
+          existing tests (test-poc, test-c4, test-agent, make gate)
+          but the document cited none of them. The claims performed
+          authority without linking to evidence. A reader seeing only
+          the doc would conclude the claims were unproven. Fixed by
+          adding "Proven by:" backrefs to each claim.
+        caught_by: "3-model adversarial review (Gemini 2.5 Flash, Grok 3 Mini, GPT-4o)"
 
   - id: nominalisation-cascade
     name: "Nominalisation Cascade"
@@ -276,6 +302,19 @@ patterns:
     refs:
       - "SD-190 (governance recursion — plausible-but-wrong tests named)"
       - "Bugbot finding on PR #386 V-03c (array body passes for wrong reason)"
+    examples:
+      - id: midgetctl-rust-grep
+        date: 2026-03-11
+        ref: "bd8c152"
+        what_happened: >
+          test-steer-live.sh claimed to verify that an agent switched
+          from Python to Rust after a mid-flight steer. The assertion
+          was `grep -qE "(fn |-> |i32|i64)"` which matches English
+          prose ("fn" appears in "function", "->" in markdown arrows).
+          Three independent models (Gemini, Grok, GPT-4o) converged on
+          this as right-answer-wrong-work. Fixed by requiring co-occurrence
+          of `fn [a-z_]+(` AND a Rust type annotation.
+        caught_by: "3-model adversarial review (Gemini 2.5 Flash, Grok 3 Mini, GPT-4o)"
 
   # ─── GOVERNANCE PATTERNS ──────────────────────────────────
 
