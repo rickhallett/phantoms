@@ -79,29 +79,41 @@ CHARS_PER_TOKEN = 4
 TARGET_CHUNK_TOKENS = 40_000
 TARGET_CHUNK_CHARS = TARGET_CHUNK_TOKENS * CHARS_PER_TOKEN
 
-# Model configs
+# Model configs - defaults overridden by .env (ANTHROPIC_MODEL, OPENAI_MODEL, etc.)
 MODELS = {
     "claude": {
         "api": "anthropic",
         "model": "claude-haiku-4-5-20251001",
         "env_key": "ANTHROPIC_API_KEY",
+        "model_env_key": "ANTHROPIC_MODEL",
     },
     "gpt": {
         "api": "openai",
         "model": "gpt-5-mini-2025-08-07",
         "env_key": "OPENAI_API_KEY",
+        "model_env_key": "OPENAI_MODEL",
     },
     "gemini": {
         "api": "google",
         "model": "gemini-3-flash-preview",
         "env_key": "GEMINI_API_KEY",
+        "model_env_key": "GEMINI_MODEL",
     },
     "grok": {
         "api": "xai",
         "model": "grok-4-1-fast-reasoning",
         "env_key": "XAI_API_KEY",
+        "model_env_key": "GROK_MODEL",
     },
 }
+
+
+def _resolve_models(env: dict[str, str]) -> None:
+    """Override hardcoded model identifiers from .env if present."""
+    for key, config in MODELS.items():
+        env_model = env.get(config.get("model_env_key", ""))
+        if env_model:
+            config["model"] = env_model
 
 
 # -- Env loading -------------------------------------------------------------
@@ -950,11 +962,12 @@ def cmd_sweep(args: list[str]) -> None:
         else:
             i += 1
 
-    # Load env
+    # Load env and resolve model identifiers
     env = load_env(ENV_PATH)
     for key in ["ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GEMINI_API_KEY", "XAI_API_KEY"]:
         if key not in env and key in os.environ:
             env[key] = os.environ[key]
+    _resolve_models(env)
 
     # Load slopodar
     if not SLOPODAR_PATH.exists():
